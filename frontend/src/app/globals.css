@@ -1,0 +1,64 @@
+@import url('https://fonts.googleapis.com/css2?family=Special+Elite&family=IM+Fell+English:ital@0;1&display=swap');
+@import "tailwindcss";
+
+@custom-variant dark (&:where(.dark, .dark *));
+
+@theme {
+  --font-mono: Consolas, Monaco, "Andale Mono", "Ubuntu Mono", monospace;
+  --font-typewriter: "Special Elite", system-ui, sans-serif;
+  --font-vintage: "IM Fell English", serif;
+
+  /* Detective Theme Colors */
+  --color-paper: #fdfbf7;
+  --color-ink: #1a1a1a;
+  --color-classified: #8b0000;
+  --color-cork: #3d2b1f;
+
+  /* Animations */
+  --animate-scan: scan 2s linear infinite;
+
+  @keyframes scan {
+    0% {
+      transform: translateY(-100%);
+    }
+
+    100% {
+      transform: translateY(100%);
+    }
+  }
+}
+
+body {
+  @apply bg-[#121212] text-neutral-100 font-vintage;
+}
+
+/* Custom Utilities for Detective Theme */
+.bg-aged-paper {
+  background-color: var(--color-paper);
+  background-image: url("https://www.transparenttextures.com/patterns/notebook.png");
+}
+
+.font-typewriter {
+  font-family: var(--font-typewriter);
+}
+
+.text-classified {
+  color: var(--color-classified);
+}
+
+.custom-scrollbar::-webkit-scrollbar {
+  width: 4px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb {
+  background: #27272a;
+  border-radius: 10px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb:hover {
+  background: #3f3f46;
+}

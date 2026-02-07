@@ -1,0 +1,178 @@
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Tree {
+  id          String   @id @default(uuid())
+  ownerId     String   @map("owner_id")
+  name        String
+  description String?
+  isPublic    Boolean  @default(false) @map("is_public")
+  isActive    Boolean  @default(true) @map("is_active")
+  createdAt   DateTime @default(now()) @map("created_at")
+  updatedAt   DateTime @updatedAt @map("updated_at")
+
+  owner       User     @relation(fields: [ownerId], references: [id])
+  members     Member[]
+  relations   Relation[]
+  shares      TreeShare[]
+  auditLogs   AuditLog[]
+
+  @@map("trees")
+}
+
+model Member {
+  id          String   @id @default(uuid())
+  treeId      String   @map("tree_id")
+  fullName    String   @map("full_name")
+  gender      String?
+  birthDate   DateTime? @map("birth_date") @db.Date
+  deathDate   DateTime? @map("death_date") @db.Date
+  isAlive     Boolean  @default(true) @map("is_alive")
+  photoUrl    String?  @map("photo_url")
+  job         String?
+  alias       String?
+  description String?
+  attributes  Json?    @default("{}")
+  positionX   Float    @default(0) @map("position_x")
+  positionY   Float    @default(0) @map("position_y")
+  createdAt   DateTime @default(now()) @map("created_at")
+  updatedAt   DateTime @updatedAt @map("updated_at")
+
+  tree        Tree     @relation(fields: [treeId], references: [id], onDelete: Cascade)
+  sourceRelations Relation[] @relation("SourceMember")
+  targetRelations Relation[] @relation("TargetMember")
+
+  @@map("members")
+}
+
+model Relation {
+  id             String   @id @default(uuid())
+  treeId         String   @map("tree_id")
+  sourceMemberId String   @map("source_member_id")
+  targetMemberId String   @map("target_member_id")
+  relationType   String   @map("relation_type")
+  createdAt      DateTime @default(now()) @map("created_at")
+
+  tree           Tree     @relation(fields: [treeId], references: [id], onDelete: Cascade)
+  sourceMember   Member   @relation("SourceMember", fields: [sourceMemberId], references: [id], onDelete: Cascade)
+  targetMember   Member   @relation("TargetMember", fields: [targetMemberId], references: [id], onDelete: Cascade)
+
+  @@map("relations")
+}
+
+model TreeShare {
+  id             String   @id @default(uuid())
+  treeId         String   @map("tree_id")
+  sharedWithEmail String   @map("shared_with_email")
+  permission     String   // 'view' | 'edit'
+  sharedPassword String?  @map("shared_password")
+  createdAt      DateTime @default(now()) @map("created_at")
+
+  tree           Tree     @relation(fields: [treeId], references: [id], onDelete: Cascade)
+
+  @@map("tree_shares")
+}
+
+model User {
+  id              String   @id @default(uuid())
+  email           String   @unique
+  password        String
+  fullName        String?  @map("full_name")
+  isPremium       Boolean  @default(false) @map("is_premium")
+  role            UserRole @default(USER)
+  isActive        Boolean  @default(true) @map("is_active")
+  isEmailVerified Boolean  @default(false) @map("is_email_verified")
+  createdAt       DateTime @default(now()) @map("created_at")
+  updatedAt       DateTime @updatedAt @map("updated_at")
+
+  trees     Tree[]
+  auditLogs AuditLog[]
+  otps      Otp[]
+
+  @@map("users")
+}
+
+model Otp {
+  id        String   @id @default(uuid())
+  email     String
+  code      String
+  expiresAt DateTime @map("expires_at")
+  createdAt DateTime @default(now()) @map("created_at")
+
+  user      User     @relation(fields: [email], references: [email], onDelete: Cascade)
+
+  @@map("otps")
+}
+
+model AuditLog {
+  id        String   @id @default(uuid())
+  treeId    String?  @map("tree_id")
+  userId    String   @map("user_id")
+  action    String
+  details   Json?
+  ipAddress String?  @map("ip_address")
+  createdAt DateTime @default(now()) @map("created_at")
+
+  tree   Tree? @relation(fields: [treeId], references: [id], onDelete: Cascade)
+  user   User  @relation(fields: [userId], references: [id])
+
+  @@map("audit_logs")
+}
+
+model Collection {
+  id          String   @id @default(uuid())
+  name        String
+  description String?
+  type        String   // 'anime', 'movie', 'etc'
+  createdAt   DateTime @default(now()) @map("created_at")
+  updatedAt   DateTime @updatedAt @map("updated_at")
+
+  cards       CollectionCard[]
+  relations   CollectionRelation[]
+
+  @@map("collections")
+}
+
+model CollectionCard {
+  id           String   @id @default(uuid())
+  collectionId String   @map("collection_id")
+  name         String
+  characterName String  @map("character_name")
+  photoUrl     String   @map("photo_url")
+  rarity       String?  // 'common', 'rare', 'epic', 'legendary'
+  details      Json?    @default("{}")
+  createdAt    DateTime @default(now()) @map("created_at")
+
+  collection   Collection @relation(fields: [collectionId], references: [id], onDelete: Cascade)
+  sourceRelations CollectionRelation[] @relation("SourceCard")
+  targetRelations CollectionRelation[] @relation("TargetCard")
+
+  @@map("collection_cards")
+}
+
+model CollectionRelation {
+  id             String   @id @default(uuid())
+  collectionId   String   @map("collection_id")
+  sourceCardId   String   @map("source_card_id")
+  targetCardId   String   @map("target_card_id")
+  relationType   String   @map("relation_type")
+  createdAt      DateTime @default(now()) @map("created_at")
+
+  collection     Collection @relation(fields: [collectionId], references: [id], onDelete: Cascade)
+  sourceCard     CollectionCard @relation("SourceCard", fields: [sourceCardId], references: [id], onDelete: Cascade)
+  targetCard     CollectionCard @relation("TargetCard", fields: [targetCardId], references: [id], onDelete: Cascade)
+
+  @@map("collection_relations")
+}
+
+enum UserRole {
+  USER
+  ADMIN
+}
