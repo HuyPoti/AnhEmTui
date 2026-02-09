@@ -22,6 +22,7 @@ RUN npm prune --production
 
 # Step 3: Production runner
 FROM node:20-alpine AS runner
+RUN apk add --no-cache libc6-compat
 WORKDIR /app
 
 ENV NODE_ENV=production
@@ -39,8 +40,8 @@ COPY --from=builder --chown=nestjs:nodejs /app/prisma ./prisma
 USER nestjs
 
 # Set default port
-ENV PORT=8000
-EXPOSE 8000
+ENV PORT=10000
+EXPOSE 10000
 
 # Use a shell script or direct command to handle migrations and start
 # Note: migrate deploy is safer for production than db push
