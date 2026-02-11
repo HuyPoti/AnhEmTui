@@ -53,7 +53,9 @@ export default function CollectionsPage() {
                         </button>
                         <div>
                             <h1 className="text-2xl font-black uppercase tracking-tighter italic">{t('app.title')} Archives</h1>
-                            <p className="text-[10px] text-cyan-500 uppercase font-black tracking-[0.2em]">{t('admin.nav.collections')}</p>
+                            <div className="flex items-center gap-2">
+                                <p className="text-[10px] text-cyan-500 uppercase font-black tracking-[0.2em]">{t('admin.nav.collections')}</p>
+                            </div>
                         </div>
                     </div>
 

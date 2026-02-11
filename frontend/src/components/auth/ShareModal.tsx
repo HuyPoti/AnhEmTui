@@ -67,10 +67,10 @@ export function ShareModal({ isOpen, onClose, treeId }: ShareModalProps) {
                 initial={{ scale: 0.95, opacity: 0 }}
                 animate={{ scale: 1, opacity: 1 }}
                 exit={{ scale: 0.95, opacity: 0 }}
-                className="relative w-full max-w-md bg-slate-900 border border-slate-700 rounded-xl shadow-2xl overflow-hidden"
+                className="relative w-full max-w-md bg-slate-900 border border-slate-700 rounded-xl shadow-2xl overflow-hidden max-h-[calc(100vh-2rem)] flex flex-col"
             >
                 {/* Header */}
-                <div className="p-4 border-b border-slate-700 bg-slate-800/50 flex justify-between items-center">
+                <div className="p-4 border-b border-slate-700 bg-slate-800/50 flex justify-between items-center shrink-0">
                     <h3 className="text-cyan-400 font-mono font-bold uppercase tracking-wider flex items-center gap-2">
                         <Share2 className="w-4 h-4" />
                         Share Access
@@ -80,7 +80,7 @@ export function ShareModal({ isOpen, onClose, treeId }: ShareModalProps) {
                     </button>
                 </div>
 
-                <div className="p-6">
+                <div className="p-6 overflow-y-auto custom-scrollbar">
                     {success ? (
                         <div className="text-center py-8 space-y-4">
                             <div className="w-16 h-16 bg-green-500/20 text-green-500 rounded-full flex items-center justify-center mx-auto">

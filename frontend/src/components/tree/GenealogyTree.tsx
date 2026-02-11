@@ -23,8 +23,9 @@ import { useAuthStore } from '@/stores/authStore';
 import { useLanguageStore } from '@/stores/languageStore';
 import { usePresentationStore } from '@/stores/presentationStore';
 import { Member } from '@/types/tree';
-import { Settings2, X, Trash2, LogOut, User as UserIcon, Cloud, Share2, Home as HomeIcon, ChevronLeft, PlusCircle, Play, Globe, Palette, Lock, Download, Upload } from 'lucide-react';
+import { Settings2, X, Trash2, LogOut, User as UserIcon, Cloud, Share2, Home as HomeIcon, ChevronLeft, PlusCircle, Play, Globe, Palette, Lock, Download, Upload, Database } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import { useRouter } from 'next/navigation';
 
 interface GenealogyTreeProps {
     onExit?: () => void;
@@ -59,6 +60,7 @@ export function GenealogyTree({ onExit }: GenealogyTreeProps) {
     const { user, isAuthenticated, token, openAuthModal, logout } = useAuthStore();
     const { language, setLanguage, t } = useLanguageStore();
     const { openPresentation } = usePresentationStore();
+    const router = useRouter();
     const [syncing, setSyncing] = useState(false);
     const [isShareModalOpen, setIsShareModalOpen] = useState(false);
     const [isThemeOpen, setIsThemeOpen] = useState(false);
@@ -85,6 +87,10 @@ export function GenealogyTree({ onExit }: GenealogyTreeProps) {
             await syncTree(token!, treeId, language === 'vi' ? 'Cây Gia Phả Của Tôi' : 'My Family Tree');
             alert(t('tree.sync_success'));
         } catch (error: any) {
+            if (error.message === 'UNAUTHORIZED') {
+                logout();
+                return;
+            }
             alert(t('tree.sync_failed') + error.message);
         } finally {
             setSyncing(false);
@@ -147,28 +153,29 @@ export function GenealogyTree({ onExit }: GenealogyTreeProps) {
                         className="!bg-slate-800 !border-slate-700"
                     />
 
-                    <Panel position="top-left" className="flex flex-col gap-2">
-                        <div className="bg-slate-900/80 backdrop-blur-xl border border-slate-700/50 p-1.5 rounded-2xl flex items-center gap-4 shadow-2xl">
+                    <Panel position="top-left" className="flex flex-col gap-2 max-w-[calc(100vw-2rem)] ml-10 lg:ml-0 z-[50]">
+                        <div className="bg-slate-900/80 backdrop-blur-xl border border-slate-700/50 p-1.5 rounded-2xl flex items-center gap-2 md:gap-4 shadow-2xl overflow-hidden">
                             <button
                                 onClick={onExit}
-                                className="w-10 h-10 bg-slate-800 hover:bg-slate-700 text-slate-400 hover:text-cyan-400 rounded-xl flex items-center justify-center transition-all active:scale-95 border border-slate-700/50"
+                                className="w-9 h-9 md:w-10 md:h-10 bg-slate-800 hover:bg-slate-700 text-slate-400 hover:text-cyan-400 rounded-xl flex items-center justify-center transition-all active:scale-95 border border-slate-700/50 shrink-0"
                                 title={t('nav.home')}
                             >
-                                <HomeIcon className="w-5 h-5" />
+                                <HomeIcon className="w-4 h-4 md:w-5 md:h-5" />
                             </button>
 
-                            <div className="h-8 w-px bg-slate-700/50" />
+                            <div className="h-8 w-px bg-slate-700/50 shrink-0" />
 
-                            <div className="flex flex-col -space-y-1 pr-4">
-                                <h1 className="text-white font-black font-mono text-lg tracking-tighter flex items-center gap-2">
-                                    ANHEMTUI <span className="text-[10px] text-cyan-500 font-bold bg-cyan-900/30 px-1.5 py-0.5 rounded border border-cyan-500/20">v4.0</span>
+                            <div className="flex flex-col -space-y-1 pr-2 md:pr-4 shrink-0">
+                                <h1 className="text-white font-black font-mono text-base md:text-lg tracking-tighter flex items-center gap-2">
+                                    AET <span className="hidden sm:inline">ENGINE</span> <span className="text-[9px] md:text-[10px] text-cyan-500 font-bold bg-cyan-900/30 px-1 md:px-1.5 py-0.5 rounded border border-cyan-500/20">v4</span>
                                 </h1>
-                                <span className="text-[9px] text-slate-500 font-bold uppercase tracking-[0.2em]">{t('nav.tree')}</span>
+                                <span className="text-[8px] md:text-[9px] text-slate-500 font-bold uppercase tracking-[0.1em] md:tracking-[0.2em]">{t('nav.tree')}</span>
                             </div>
 
-                            <div className="h-8 w-px bg-slate-700/50" />
+                            <div className="h-8 w-px bg-slate-700/50 shrink-0" />
 
-                            <div className="flex gap-1.5 pr-2">
+                            {/* Desktop Actions */}
+                            <div className="hidden lg:flex gap-1.5 pr-2">
                                 {!isReadOnly && (
                                     <button
                                         onClick={() => {
@@ -224,6 +231,16 @@ export function GenealogyTree({ onExit }: GenealogyTreeProps) {
                                     </button>
                                 )}
 
+                                {isAuthenticated && !isReadOnly && (
+                                    <button
+                                        onClick={() => router.push('/collections/contribute')}
+                                        className="bg-slate-800 hover:bg-slate-700 border border-slate-700 text-white px-4 py-2 rounded-xl text-[10px] font-black uppercase tracking-wider transition-all active:scale-95 flex items-center gap-2"
+                                    >
+                                        <Database className="w-3.5 h-3.5 text-emerald-500" />
+                                        {t('tree.contribute')}
+                                    </button>
+                                )}
+
                                 <div className="h-8 w-px bg-slate-700/50" />
 
                                 <div className="flex gap-1.5 bg-slate-800/50 p-1 rounded-xl border border-slate-700/30">
@@ -249,45 +266,152 @@ export function GenealogyTree({ onExit }: GenealogyTreeProps) {
                                         <Download className="w-5 h-5 group-hover:scale-110 transition-transform" />
                                     </button>
                                 </div>
+                            </div>
 
-                                {isReadOnly && (
-                                    <div className="flex items-center gap-2 px-4 py-2 rounded-xl text-[10px] font-black uppercase tracking-wider bg-amber-500/10 border border-amber-500/30 text-amber-500">
-                                        <Lock className="w-3.5 h-3.5" />
-                                        {language === 'vi' ? 'Chế độ xem' : 'View Only'}
-                                    </div>
-                                )}
+                            {/* Mobile/Tablet Menu Toggle */}
+                            <div className="flex lg:hidden gap-1.5 items-center">
+                                <button
+                                    onClick={() => {
+                                        const newId = crypto.randomUUID();
+                                        addNode({
+                                            id: newId,
+                                            fullName: t('tree.default_node_name'),
+                                            gender: 'male',
+                                            isAlive: true,
+                                            job: t('tree.default_node_job'),
+                                            alias: t('tree.default_node_alias'),
+                                            birthDate: ''
+                                        });
+                                    }}
+                                    className="w-9 h-9 bg-cyan-500 text-black rounded-lg flex items-center justify-center transition-all active:scale-95 shadow-lg"
+                                    title={t('tree.add_node')}
+                                >
+                                    <PlusCircle className="w-5 h-5" />
+                                </button>
+                                <button
+                                    onClick={() => openPresentation(0)}
+                                    className="w-9 h-9 bg-red-600 text-white rounded-lg flex items-center justify-center transition-all active:scale-95 shadow-lg"
+                                >
+                                    <Play className="w-4 h-4 fill-current" />
+                                </button>
 
-                                <div className="h-8 w-px bg-slate-700/50" />
+                                <div className="h-6 w-px bg-slate-700/50" />
 
-                                <div className="relative">
-                                    <button
-                                        onClick={() => setIsThemeOpen(!isThemeOpen)}
-                                        className={cn(
-                                            "w-10 h-10 rounded-xl flex items-center justify-center transition-all active:scale-95 border",
-                                            isThemeOpen ? "bg-cyan-500 text-black border-cyan-400" : "bg-slate-800 text-slate-400 hover:text-white border-slate-700/50"
-                                        )}
-                                        title={language === 'vi' ? 'Chỉnh màu' : 'Custom Theme'}
-                                    >
-                                        <Palette className="w-5 h-5" />
+                                <div className="relative group/menu">
+                                    <button className="w-9 h-9 bg-slate-800 text-slate-400 rounded-lg flex items-center justify-center transition-all active:scale-95 border border-slate-700">
+                                        <Settings2 className="w-5 h-5" />
                                     </button>
 
-                                    {isThemeOpen && (
-                                        <div className="absolute top-14 left-0 z-[100] animate-in fade-in zoom-in-95 duration-200">
-                                            <ThemeCustomizer />
+                                    <div className="absolute top-12 left-[-120px] bg-slate-900 border border-slate-700 p-2 rounded-xl shadow-2xl flex flex-col gap-2 min-w-[200px] opacity-0 pointer-events-none group-hover/menu:opacity-100 group-hover/menu:pointer-events-auto transition-all z-[110]">
+                                        {!isReadOnly && (
+                                            <button onClick={handleSync} disabled={syncing} className="flex items-center gap-3 px-3 py-2 hover:bg-slate-800 rounded-lg text-[11px] font-bold text-slate-300 uppercase tracking-wider transition-colors">
+                                                <Cloud className="w-4 h-4 text-cyan-500" />
+                                                {t('tree.cloud_save')}
+                                            </button>
+                                        )}
+                                        {!isReadOnly && (
+                                            <button onClick={() => setIsShareModalOpen(true)} className="flex items-center gap-3 px-3 py-2 hover:bg-slate-800 rounded-lg text-[11px] font-bold text-slate-300 uppercase tracking-wider transition-colors">
+                                                <Share2 className="w-4 h-4 text-blue-500" />
+                                                {t('tree.share')}
+                                            </button>
+                                        )}
+                                        {isAuthenticated && !isReadOnly && (
+                                            <button onClick={() => router.push('/collections/contribute')} className="flex items-center gap-3 px-3 py-2 hover:bg-slate-800 rounded-lg text-[11px] font-bold text-slate-300 uppercase tracking-wider transition-colors">
+                                                <Database className="w-4 h-4 text-emerald-500" />
+                                                {t('tree.contribute')}
+                                            </button>
+                                        )}
+                                        <div className="h-px bg-slate-800 my-1" />
+
+                                        {/* Language in mobile menu */}
+                                        <div className="flex bg-slate-800/50 border border-slate-700/50 rounded-lg p-1 items-center justify-between mb-1">
+                                            <button
+                                                onClick={() => setLanguage('vi')}
+                                                className={cn(
+                                                    "flex-1 px-2 py-1.5 rounded text-[10px] font-bold transition-all uppercase font-mono",
+                                                    language === 'vi' ? "bg-cyan-600 text-black" : "text-slate-500 hover:text-slate-300"
+                                                )}
+                                            >
+                                                VI
+                                            </button>
+                                            <button
+                                                onClick={() => setLanguage('en')}
+                                                className={cn(
+                                                    "flex-1 px-2 py-1.5 rounded text-[10px] font-bold transition-all uppercase font-mono",
+                                                    language === 'en' ? "bg-cyan-600 text-black" : "text-slate-500 hover:text-slate-300"
+                                                )}
+                                            >
+                                                EN
+                                            </button>
                                         </div>
-                                    )}
+
+                                        {isAuthenticated && (
+                                            <button
+                                                onClick={logout}
+                                                className="flex items-center gap-3 px-3 py-2 hover:bg-red-900/20 rounded-lg text-[11px] font-bold text-red-400 uppercase tracking-wider transition-colors w-full text-left"
+                                            >
+                                                <LogOut className="w-4 h-4" />
+                                                {t('auth.terminate')}
+                                            </button>
+                                        )}
+
+                                        {!isAuthenticated && (
+                                            <div className="flex flex-col gap-1 px-1">
+                                                <button onClick={() => openAuthModal('login')} className="text-left py-2 text-[11px] font-bold text-slate-400 uppercase tracking-widest">{t('auth.login')}</button>
+                                                <button onClick={() => openAuthModal('register')} className="text-left py-2 text-[11px] font-bold text-cyan-400 uppercase tracking-widest">{t('auth.register')}</button>
+                                            </div>
+                                        )}
+
+                                        <div className="h-px bg-slate-800 my-1" />
+                                        <button onClick={() => fileInputRef.current?.click()} className="flex items-center gap-3 px-3 py-2 hover:bg-slate-800 rounded-lg text-[11px] font-bold text-slate-300 uppercase tracking-wider transition-colors">
+                                            <Upload className="w-4 h-4 text-cyan-400" />
+                                            {t('tree.import')}
+                                        </button>
+                                        <button onClick={exportTree} className="flex items-center gap-3 px-3 py-2 hover:bg-slate-800 rounded-lg text-[11px] font-bold text-slate-300 uppercase tracking-wider transition-colors">
+                                            <Download className="w-4 h-4 text-amber-400" />
+                                            {t('tree.export')}
+                                        </button>
+                                    </div>
                                 </div>
                             </div>
+
+                            <div className="h-8 w-px bg-slate-700/50 shrink-0" />
+
+                            <div className="relative shrink-0">
+                                <button
+                                    onClick={() => setIsThemeOpen(!isThemeOpen)}
+                                    className={cn(
+                                        "w-9 h-9 md:w-10 md:h-10 rounded-xl flex items-center justify-center transition-all active:scale-95 border",
+                                        isThemeOpen ? "bg-cyan-500 text-black border-cyan-400" : "bg-slate-800 text-slate-400 hover:text-white border-slate-700/50"
+                                    )}
+                                    title={language === 'vi' ? 'Chỉnh màu' : 'Custom Theme'}
+                                >
+                                    <Palette className="w-4 h-4 md:w-5 md:h-5" />
+                                </button>
+
+                                {isThemeOpen && (
+                                    <div className="absolute top-12 md:top-14 left-0 z-[100] animate-in fade-in zoom-in-95 duration-200">
+                                        <ThemeCustomizer />
+                                    </div>
+                                )}
+                            </div>
                         </div>
+
+                        {isReadOnly && (
+                            <div className="flex items-center gap-2 px-3 md:px-4 py-1.5 md:py-2 rounded-xl text-[9px] md:text-[10px] font-black uppercase tracking-wider bg-amber-500/10 border border-amber-500/30 text-amber-500 w-fit">
+                                <Lock className="w-3 md:w-3.5 h-3 md:h-3.5" />
+                                {language === 'vi' ? 'Chế độ xem' : 'View Only'}
+                            </div>
+                        )}
                     </Panel>
 
-                    <Panel position="top-right" className="flex gap-2 p-2">
+                    <Panel position="top-right" className="hidden lg:flex gap-2 p-1.5 md:p-2 z-[40]">
                         {/* Language Switcher */}
-                        <div className="flex bg-slate-800/80 border border-slate-700 rounded-lg p-1 backdrop-blur items-center gap-1">
+                        <div className="flex bg-slate-800/80 border border-slate-700 rounded-lg p-0.5 md:p-1 backdrop-blur items-center gap-0.5 md:gap-1">
                             <button
                                 onClick={() => setLanguage('vi')}
                                 className={cn(
-                                    "px-2 py-1 rounded text-[10px] font-bold transition-all uppercase font-mono",
+                                    "px-1.5 md:px-2 py-1 rounded text-[9px] md:text-[10px] font-bold transition-all uppercase font-mono",
                                     language === 'vi' ? "bg-cyan-600 text-black" : "text-slate-500 hover:text-slate-300"
                                 )}
                             >
@@ -296,50 +420,50 @@ export function GenealogyTree({ onExit }: GenealogyTreeProps) {
                             <button
                                 onClick={() => setLanguage('en')}
                                 className={cn(
-                                    "px-2 py-1 rounded text-[10px] font-bold transition-all uppercase font-mono",
+                                    "px-1.5 md:px-2 py-1 rounded text-[9px] md:text-[10px] font-bold transition-all uppercase font-mono",
                                     language === 'en' ? "bg-cyan-600 text-black" : "text-slate-500 hover:text-slate-300"
                                 )}
                             >
                                 EN
                             </button>
-                            <div className="w-[1px] h-4 bg-slate-700 mx-1" />
-                            <Globe className="w-3.5 h-3.5 text-slate-500 mr-1" />
+                            <div className="w-[1px] h-3 md:h-4 bg-slate-700 mx-0.5 md:mx-1" />
+                            <Globe className="w-3 md:w-3.5 h-3 md:h-3.5 text-slate-500 mr-0.5 md:mr-1" />
                         </div>
 
                         {isAuthenticated ? (
-                            <div className="flex items-center gap-3 bg-slate-800/80 border border-slate-700 rounded-lg px-3 py-1.5 backdrop-blur">
-                                <div className="flex items-center gap-2">
-                                    <div className="w-6 h-6 rounded-full bg-cyan-900/50 border border-cyan-500/30 flex items-center justify-center">
-                                        <UserIcon className="w-3.5 h-3.5 text-cyan-400" />
+                            <div className="flex items-center gap-2 md:gap-3 bg-slate-800/80 border border-slate-700 rounded-lg px-2 md:px-3 py-1 md:py-1.5 backdrop-blur max-w-[120px] md:max-w-none">
+                                <div className="flex items-center gap-1.5 md:gap-2 overflow-hidden">
+                                    <div className="w-5 h-5 md:w-6 md:h-6 rounded-full bg-cyan-900/50 border border-cyan-500/30 flex items-center justify-center shrink-0">
+                                        <UserIcon className="w-3 md:w-3.5 h-3 md:h-3.5 text-cyan-400" />
                                     </div>
-                                    <span className="text-[10px] font-mono font-bold text-white uppercase tracking-wider">
+                                    <span className="text-[9px] md:text-[10px] font-mono font-bold text-white uppercase tracking-wider truncate">
                                         {user?.fullName}
                                     </span>
                                 </div>
-                                <div className="w-[1px] h-4 bg-slate-700" />
+                                <div className="w-[1px] h-3 md:h-4 bg-slate-700 shrink-0" />
                                 <button
                                     onClick={logout}
-                                    className="text-slate-400 hover:text-red-400 transition-colors p-1"
+                                    className="text-slate-400 hover:text-red-400 transition-colors p-1 shrink-0"
                                     title={t('auth.terminate')}
                                 >
-                                    <LogOut className="w-4 h-4" />
+                                    <LogOut className="w-3.5 h-3.5 md:w-4 md:h-4" />
                                 </button>
                             </div>
                         ) : (
-                            <>
+                            <div className="flex gap-1">
                                 <button
                                     onClick={() => openAuthModal('login')}
-                                    className="text-[10px] font-mono font-bold text-slate-400 hover:text-cyan-400 uppercase tracking-widest px-3 py-1.5 transition-colors border border-transparent hover:border-cyan-500/30 rounded"
+                                    className="text-[9px] md:text-[10px] font-mono font-bold text-slate-400 hover:text-cyan-400 uppercase tracking-widest px-2 md:px-3 py-1 md:py-1.5 transition-colors border border-transparent hover:border-cyan-500/30 rounded"
                                 >
                                     {t('auth.login')}
                                 </button>
                                 <button
                                     onClick={() => openAuthModal('register')}
-                                    className="text-[10px] font-mono font-bold text-white bg-cyan-950/50 hover:bg-cyan-900/50 border border-cyan-500/30 px-4 py-1.5 rounded uppercase tracking-widest transition-all shadow-[0_0_10px_rgba(34,211,238,0.1)] hover:shadow-[0_0_15px_rgba(34,211,238,0.2)]"
+                                    className="text-[9px] md:text-[10px] font-mono font-bold text-white bg-cyan-950/50 hover:bg-cyan-900/50 border border-cyan-500/30 px-3 md:px-4 py-1 md:py-1.5 rounded uppercase tracking-widest transition-all shadow-[0_0_10px_rgba(34,211,238,0.1)] hover:shadow-[0_0_15px_rgba(34,211,238,0.2)] hidden sm:block"
                                 >
                                     {t('auth.register')}
                                 </button>
-                            </>
+                            </div>
                         )}
                     </Panel>
                 </ReactFlow>

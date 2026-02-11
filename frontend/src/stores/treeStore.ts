@@ -537,6 +537,12 @@ export const useTreeStore = create<TreeState>()(
                     body: JSON.stringify(syncData)
                 });
 
+                if (response.status === 401) {
+                    // We can't easily call logout here without circular dependency or extra imports
+                    // but we can throw a specific error and let the component handle it
+                    throw new Error('UNAUTHORIZED');
+                }
+
                 if (!response.ok) {
                     const error = await response.json();
                     throw new Error(error.message || 'Sync failed');
@@ -554,6 +560,10 @@ export const useTreeStore = create<TreeState>()(
                     }
                 });
 
+                if (response.status === 401) {
+                    throw new Error('UNAUTHORIZED');
+                }
+
                 if (!response.ok) {
                     const error = await response.json();
                     throw new Error(error.message || 'Delete failed');
@@ -567,6 +577,11 @@ export const useTreeStore = create<TreeState>()(
                 const treesResponse = await fetch(`${API_BASE_URL}/trees`, {
                     headers: { 'Authorization': `Bearer ${token}` }
                 });
+
+                if (treesResponse.status === 401) {
+                    throw new Error('UNAUTHORIZED');
+                }
+
                 if (treesResponse.ok) {
                     set({ userTrees: await treesResponse.json() });
                 }

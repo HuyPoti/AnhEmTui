@@ -51,6 +51,10 @@ export function LeftSidebar() {
             const response = await fetch(`${API_BASE_URL}/trees`, {
                 headers: { 'Authorization': `Bearer ${token}` }
             });
+            if (response.status === 401) {
+                logout();
+                return;
+            }
             if (response.ok) {
                 const data = await response.json();
                 setUserTrees(data);
@@ -69,6 +73,10 @@ export function LeftSidebar() {
             const response = await fetch(`${API_BASE_URL}/trees/${treeId}/history`, {
                 headers: { 'Authorization': `Bearer ${token}` }
             });
+            if (response.status === 401) {
+                logout();
+                return;
+            }
             if (response.ok) {
                 const data = await response.json();
                 setHistory(data);
@@ -90,6 +98,10 @@ export function LeftSidebar() {
                 await deleteTree(token!, id);
                 alert(language === 'vi' ? 'Tiến trình đã bị chấm dứt.' : 'Terminal sequence terminated.');
             } catch (error: any) {
+                if (error.message === 'UNAUTHORIZED') {
+                    logout();
+                    return;
+                }
                 alert((language === 'vi' ? 'Lỗi: ' : 'Error: ') + error.message);
             }
         }
@@ -105,6 +117,10 @@ export function LeftSidebar() {
                 fetchTrees();
             }
         } catch (error: any) {
+            if (error.message === 'UNAUTHORIZED') {
+                logout();
+                return;
+            }
             alert((language === 'vi' ? 'Lỗi đổi tên: ' : 'Rename failed: ') + error.message);
         }
     };
@@ -118,13 +134,27 @@ export function LeftSidebar() {
     return (
         <motion.div
             initial={false}
-            animate={{ width: isExpanded ? 280 : 64 }}
-            className="h-screen bg-slate-900 border-r border-slate-800 flex flex-col relative z-[60] transition-all"
+            animate={{
+                width: isExpanded ? 280 : 64,
+                x: 0
+            }}
+            className={cn(
+                "h-screen bg-slate-900 border-r border-slate-800 flex flex-col relative z-[100] transition-all",
+                "fixed lg:relative overflow-visible"
+            )}
         >
+            {/* Backdrop for mobile when expanded */}
+            {isExpanded && (
+                <div
+                    className="fixed inset-0 bg-black/50 backdrop-blur-sm z-[-1] lg:hidden"
+                    onClick={() => setIsExpanded(false)}
+                />
+            )}
+
             {/* Toggle Button */}
             <button
                 onClick={() => setIsExpanded(!isExpanded)}
-                className="absolute -right-3 top-10 w-6 h-6 bg-cyan-600 rounded-full flex items-center justify-center text-black hover:bg-cyan-500 transition-colors z-10"
+                className="absolute -right-3 top-20 lg:top-10 w-6 h-6 bg-cyan-600 rounded-full flex items-center justify-center text-black hover:bg-cyan-500 transition-colors z-10 shadow-lg"
             >
                 {isExpanded ? <ChevronLeft className="w-4 h-4" /> : <ChevronRight className="w-4 h-4" />}
             </button>

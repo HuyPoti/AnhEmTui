@@ -140,7 +140,7 @@ export function NodeDetailPanel({ member, onClose }: NodeDetailPanelProps) {
                 animate={{ x: 0, opacity: 1 }}
                 exit={{ x: '100%', opacity: 0 }}
                 transition={{ type: 'spring', damping: 20, stiffness: 100 }}
-                className="fixed top-0 right-0 h-full w-96 bg-slate-900/95 backdrop-blur-md border-l border-slate-700 shadow-2xl z-50 overflow-hidden flex flex-col"
+                className="fixed top-0 right-0 h-full w-full sm:w-96 bg-slate-900/95 backdrop-blur-md border-l border-slate-700 shadow-2xl z-[80] overflow-hidden flex flex-col"
             >
                 {/* Header */}
                 <div className="p-4 border-b border-slate-700 bg-slate-800/50 flex justify-between items-center text-paper">

@@ -96,6 +96,7 @@ model User {
   trees     Tree[]
   auditLogs AuditLog[]
   otps      Otp[]
+  contributions Collection[] @relation("UserContributions")
 
   @@map("users")
 }
@@ -132,9 +133,12 @@ model Collection {
   name        String
   description String?
   type        String   // 'anime', 'movie', 'etc'
+  authorId    String?  @map("author_id")
+  status      String   @default("APPROVED") // 'PENDING', 'APPROVED', 'REJECTED'
   createdAt   DateTime @default(now()) @map("created_at")
   updatedAt   DateTime @updatedAt @map("updated_at")
 
+  author      User?    @relation("UserContributions", fields: [authorId], references: [id])
   cards       CollectionCard[]
   relations   CollectionRelation[]
 

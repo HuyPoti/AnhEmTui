@@ -119,39 +119,6 @@ export default function AdminDashboardPage() {
                     </div>
                 </div>
 
-                <div className="space-y-6">
-                    <h2 className="text-lg font-black text-white uppercase tracking-widest">{t('admin.dashboard.health')}</h2>
-                    <div className="bg-slate-900/30 border border-slate-800 p-6 rounded-3xl space-y-6">
-                        <div className="space-y-2">
-                            <div className="flex justify-between text-[10px] uppercase font-black">
-                                <span className="text-slate-500">{t('admin.dashboard.storage')}</span>
-                                <span className="text-white">64%</span>
-                            </div>
-                            <div className="h-2 bg-slate-800 rounded-full overflow-hidden">
-                                <div className="h-full bg-cyan-500 w-[64%]" />
-                            </div>
-                        </div>
-                        <div className="space-y-2">
-                            <div className="flex justify-between text-[10px] uppercase font-black">
-                                <span className="text-slate-500">{t('admin.dashboard.api')}</span>
-                                <span className="text-emerald-500">Stable</span>
-                            </div>
-                            <div className="h-2 bg-slate-800 rounded-full overflow-hidden">
-                                <div className="h-full bg-emerald-500 w-[28%]" />
-                            </div>
-                        </div>
-                        <div className="space-y-2">
-                            <div className="flex justify-between text-[10px] uppercase font-black">
-                                <span className="text-slate-500">{t('admin.dashboard.clearance')}</span>
-                                <span className="text-white">Active</span>
-                            </div>
-                            <div className="p-4 bg-emerald-500/10 border border-emerald-500/20 rounded-xl text-emerald-500 text-[10px] uppercase font-bold flex items-center gap-2">
-                                <ShieldCheck className="w-4 h-4" />
-                                {t('admin.dashboard.encrypted')}
-                            </div>
-                        </div>
-                    </div>
-                </div>
             </div>
         </div>
     );

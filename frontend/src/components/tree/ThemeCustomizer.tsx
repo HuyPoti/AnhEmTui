@@ -40,7 +40,7 @@ export function ThemeCustomizer() {
     if (isReadOnly) return null;
 
     return (
-        <div className="p-4 w-64 bg-slate-900/95 backdrop-blur-xl border border-slate-700/50 rounded-2xl shadow-2xl space-y-4">
+        <div className="p-4 w-[280px] sm:w-64 bg-slate-900/95 backdrop-blur-xl border border-slate-700/50 rounded-2xl shadow-2xl space-y-4">
             <h3 className="text-xs font-black font-typewriter text-white uppercase tracking-widest flex items-center gap-2">
                 <Palette className="w-4 h-4 text-cyan-500" />
                 {language === 'vi' ? 'TÙY CHỈNH GIAO DIỆN' : 'BOARD SETTINGS'}

@@ -2,7 +2,7 @@
 
 import React, { useEffect, useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Package, Plus, Trash2, Calendar, LayoutGrid, AlertCircle, Loader2, X, Upload, Ghost, Star, Info, Share2, Edit2, Network, List } from 'lucide-react';
+import { Package, Plus, Trash2, Calendar, LayoutGrid, AlertCircle, Loader2, X, Upload, Ghost, Star, Info, Share2, Edit2, Network, List, ShieldCheck } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { API_BASE_URL } from '@/config/api';
 import { useLanguageStore } from '@/stores/languageStore';
@@ -23,6 +23,7 @@ export default function CollectionManagementPage() {
     const [newRelation, setNewRelation] = useState({ sourceCardId: '', targetCardId: '', relationType: 'rival' });
     const [relationViewMode, setRelationViewMode] = useState<'list' | 'tree'>('list');
     const [editingCard, setEditingCard] = useState<any>(null);
+    const [statusFilter, setStatusFilter] = useState('ALL');
 
     // Form states
     const [newCollection, setNewCollection] = useState({ name: '', description: '', type: 'anime' });
@@ -306,14 +307,38 @@ export default function CollectionManagementPage() {
         }
     };
 
-    return (
-        <div className="space-y-8">
-            <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
-                <div>
-                    <h1 className="text-3xl font-black text-white uppercase tracking-tighter mb-2">{t('admin.collections.title')}</h1>
-                    <p className="text-slate-500 text-[10px] uppercase font-black tracking-widest">Special Assets • Visual Customization</p>
-                </div>
+    const handleStatusUpdate = async (id: string, status: string) => {
+        try {
+            const token = localStorage.getItem('admin_token');
+            const res = await fetch(`${API_BASE_URL}/collections/${id}/status`, {
+                method: 'PATCH',
+                headers: {
+                    'Authorization': `Bearer ${token}`,
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ status })
+            });
 
+            if (res.ok) {
+                toast.success(`Collection ${status}`);
+                fetchCollections();
+            } else {
+                toast.error('Failed to update status');
+            }
+        } catch (err) {
+            console.error(err);
+            toast.error('An error occurred');
+        }
+    };
+
+    return (
+        <div className="space-y-10">
+            {/* Header */}
+            <div className="flex justify-between items-center">
+                <div>
+                    <h1 className="text-3xl font-black text-white uppercase tracking-tighter italic">Archive Archives</h1>
+                    <p className="text-[10px] text-cyan-500 uppercase font-black tracking-widest italic">Protocol 04 // Asset Management</p>
+                </div>
                 <button
                     onClick={() => setIsCreateModalOpen(true)}
                     className="bg-white hover:bg-cyan-500 text-black font-black uppercase tracking-widest px-6 py-3 rounded-xl transition-all flex items-center gap-2 group"
@@ -323,10 +348,29 @@ export default function CollectionManagementPage() {
                 </button>
             </div>
 
+            {/* Filter Tabs */}
+            <div className="flex gap-4 border-b border-slate-800 pb-px">
+                {['ALL', 'PENDING', 'APPROVED', 'REJECTED'].map((status) => (
+                    <button
+                        key={status}
+                        onClick={() => setStatusFilter(status)}
+                        className={cn(
+                            "px-6 py-3 text-[10px] font-black uppercase tracking-widest transition-all relative",
+                            statusFilter === status ? "text-cyan-500" : "text-slate-500 hover:text-slate-300"
+                        )}
+                    >
+                        {status}
+                        {statusFilter === status && (
+                            <motion.div layoutId="tab" className="absolute bottom-0 left-0 right-0 h-0.5 bg-cyan-500" />
+                        )}
+                    </button>
+                ) as any)}
+            </div>
+
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                 {isLoading ? (
                     [1, 2, 3].map(i => <div key={i} className="h-48 bg-slate-900 rounded-3xl animate-pulse" />)
-                ) : collections.map((collection) => (
+                ) : collections.filter(c => statusFilter === 'ALL' || c.status === statusFilter).map((collection) => (
                     <motion.div
                         key={collection.id}
                         initial={{ opacity: 0, y: 20 }}
@@ -340,6 +384,24 @@ export default function CollectionManagementPage() {
                                 <Package className="w-6 h-6" />
                             </div>
                             <div className="flex gap-2">
+                                {collection.status === 'PENDING' && (
+                                    <>
+                                        <button
+                                            onClick={() => handleStatusUpdate(collection.id, 'APPROVED')}
+                                            className="p-2 hover:bg-emerald-500/10 rounded-lg transition-colors text-emerald-500"
+                                            title="Approve"
+                                        >
+                                            <ShieldCheck className="w-4 h-4" />
+                                        </button>
+                                        <button
+                                            onClick={() => handleStatusUpdate(collection.id, 'REJECTED')}
+                                            className="p-2 hover:bg-red-500/10 rounded-lg transition-colors text-red-500"
+                                            title="Reject"
+                                        >
+                                            <X className="w-4 h-4" />
+                                        </button>
+                                    </>
+                                )}
                                 <button
                                     onClick={() => {
                                         setEditingCollection(collection);
@@ -380,10 +442,19 @@ export default function CollectionManagementPage() {
                         <div className="space-y-4 relative z-10">
                             <div>
                                 <div className="flex items-center gap-2 mb-1">
+                                    <span className={cn(
+                                        "px-2 py-0.5 rounded text-[8px] font-black uppercase border",
+                                        collection.status === 'APPROVED' ? "bg-emerald-500/10 text-emerald-500 border-emerald-500/20" :
+                                            collection.status === 'PENDING' ? "bg-amber-500/10 text-amber-500 border-amber-500/20" :
+                                                "bg-red-500/10 text-red-500 border-red-500/20"
+                                    )}>{collection.status}</span>
                                     <span className="px-2 py-0.5 bg-cyan-500/10 text-cyan-500 rounded text-[8px] font-black uppercase border border-cyan-500/20">{collection.type}</span>
                                     <h3 className="text-lg font-black text-white uppercase tracking-tight truncate">{collection.name}</h3>
                                 </div>
                                 <p className="text-xs text-slate-500 font-mono italic line-clamp-2">"{collection.description || 'No database intel...'}"</p>
+                                {collection.author && (
+                                    <p className="text-[8px] text-slate-600 uppercase font-black mt-2">Submitted by: {collection.author.fullName || collection.author.email}</p>
+                                )}
                             </div>
 
                             <div className="pt-4 border-t border-slate-800/50 flex items-center justify-between text-[10px] font-black uppercase tracking-widest">

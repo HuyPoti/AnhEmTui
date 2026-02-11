@@ -133,6 +133,12 @@ const translations: Record<Language, Record<string, string>> = {
         'tree.export_success': 'Đã xuất file dữ liệu gia phả!',
         'tree.import_success': 'Đã nhập dữ liệu thành công!',
         'tree.import_error': 'File không hợp lệ hoặc bị lỗi!',
+        'tree.contribute': 'Đóng góp Intel',
+        'contribute.title': 'Đóng góp Intel',
+        'contribute.tagline': 'Giao thức bảo mật',
+        'contribute.assets': 'Tài sản Định danh',
+        'contribute.network': 'Mạng lưới Tình báo',
+        'contribute.submit': 'Gửi xét duyệt',
     },
     en: {
         'app.title': 'Anh Em Tui',
@@ -257,6 +263,12 @@ const translations: Record<Language, Record<string, string>> = {
         'tree.export_success': 'Exported genealogy data file!',
         'tree.import_success': 'Data imported successfully!',
         'tree.import_error': 'Invalid file or error occurred!',
+        'tree.contribute': 'Contribute Intel',
+        'contribute.title': 'Contribute Intel',
+        'contribute.tagline': 'Secure submission protocol',
+        'contribute.assets': 'Identifying Assets',
+        'contribute.network': 'Intelligence Network',
+        'contribute.submit': 'Submit for Review',
     }
 };
 

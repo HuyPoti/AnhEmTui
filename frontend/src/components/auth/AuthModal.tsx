@@ -136,12 +136,12 @@ export function AuthModal() {
                     initial={{ scale: 0.9, opacity: 0, y: 20 }}
                     animate={{ scale: 1, opacity: 1, y: 0 }}
                     exit={{ scale: 0.9, opacity: 0, y: 20 }}
-                    className="relative w-full max-w-md bg-slate-900 border border-slate-700 shadow-2xl rounded-2xl overflow-hidden"
+                    className="relative w-full max-w-md bg-slate-900 border border-slate-700 shadow-2xl rounded-2xl overflow-hidden max-h-[calc(100vh-2rem)] flex flex-col"
                 >
                     {/* Top Accent Bar */}
-                    <div className="h-1 w-full bg-gradient-to-r from-cyan-500 via-blue-500 to-purple-500" />
+                    <div className="h-1 w-full bg-gradient-to-r from-cyan-500 via-blue-500 to-purple-500 shrink-0" />
 
-                    <div className="p-8">
+                    <div className="p-6 md:p-8 overflow-y-auto custom-scrollbar flex-1">
                         {/* Header */}
                         <div className="flex justify-between items-start mb-8">
                             <div>

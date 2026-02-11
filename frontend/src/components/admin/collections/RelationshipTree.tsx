@@ -10,7 +10,7 @@ import {
     Node,
     Handle,
     Position,
-    ConnectionMode,Background,
+    ConnectionMode, Background,
     Controls,
 } from '@xyflow/react';
 import '@xyflow/react/dist/style.css';
@@ -93,6 +93,8 @@ const CharacterNode = ({ data }: { data: { card: Card } }) => {
             {/* Handles */}
             <Handle type="target" position={Position.Top} className="!w-2 !h-2 !bg-zinc-700 !border-zinc-600" />
             <Handle type="source" position={Position.Bottom} className="!w-2 !h-2 !bg-cyan-500 !border-cyan-400" />
+            <Handle type="target" position={Position.Left} className="!w-2 !h-2 !bg-zinc-700 !border-zinc-600" />
+            <Handle type="source" position={Position.Right} className="!w-2 !h-2 !bg-cyan-500 !border-cyan-400" />
         </div>
     );
 };

@@ -26,22 +26,22 @@ export function LandingPage({ onStartDemo }: LandingPageProps) {
             </div>
 
             {/* Navbar */}
-            <nav className="relative z-10 flex items-center justify-between px-8 py-6 border-b border-slate-900 bg-slate-950/50 backdrop-blur-md">
+            <nav className="relative z-10 flex items-center justify-between px-4 md:px-8 py-4 md:py-6 border-b border-slate-900 bg-slate-950/50 backdrop-blur-md">
                 <div className="flex items-center gap-2">
-                    <div className="w-10 h-10 bg-cyan-600 rounded-lg flex items-center justify-center text-black shadow-[0_0_20px_rgba(8,145,178,0.3)]">
-                        <TreePine className="w-6 h-6" />
+                    <div className="w-8 h-8 md:w-10 md:h-10 bg-cyan-600 rounded-lg flex items-center justify-center text-black shadow-[0_0_20px_rgba(8,145,178,0.3)]">
+                        <TreePine className="w-5 h-5 md:w-6 md:h-6" />
                     </div>
-                    <span className="text-xl font-bold font-mono tracking-tighter text-white uppercase italic">
+                    <span className="text-lg md:text-xl font-bold font-mono tracking-tighter text-white uppercase italic">
                         {t('app.title')}
                     </span>
                 </div>
-                <div className="flex items-center gap-4 md:gap-8">
+                <div className="flex items-center gap-3 md:gap-8">
                     {/* Language Switcher */}
                     <div className="flex bg-slate-900/50 border border-slate-800 rounded-full p-1 items-center">
                         <button
                             onClick={() => setLanguage('vi')}
                             className={cn(
-                                "px-3 py-1 rounded-full text-[10px] font-bold transition-all uppercase",
+                                "px-2 md:px-3 py-1 rounded-full text-[9px] md:text-[10px] font-bold transition-all uppercase",
                                 language === 'vi' ? "bg-cyan-600 text-black shadow-lg" : "text-slate-500 hover:text-slate-300"
                             )}
                         >
@@ -50,7 +50,7 @@ export function LandingPage({ onStartDemo }: LandingPageProps) {
                         <button
                             onClick={() => setLanguage('en')}
                             className={cn(
-                                "px-3 py-1 rounded-full text-[10px] font-bold transition-all uppercase",
+                                "px-2 md:px-3 py-1 rounded-full text-[9px] md:text-[10px] font-bold transition-all uppercase",
                                 language === 'en' ? "bg-cyan-600 text-black shadow-lg" : "text-slate-500 hover:text-slate-300"
                             )}
                         >
@@ -60,56 +60,56 @@ export function LandingPage({ onStartDemo }: LandingPageProps) {
 
                     <button
                         onClick={() => openAuthModal('login')}
-                        className="text-sm font-medium hover:text-cyan-400 transition-colors hidden md:block"
+                        className="text-xs md:text-sm font-medium hover:text-cyan-400 transition-colors hidden sm:block"
                     >
                         {t('auth.login')}
                     </button>
                     <button
                         onClick={() => openAuthModal('register')}
-                        className="bg-white text-black px-5 py-2 rounded-full text-sm font-bold hover:bg-cyan-400 transition-all active:scale-95"
+                        className="bg-white text-black px-4 md:px-5 py-2 rounded-full text-xs md:text-sm font-bold hover:bg-cyan-400 transition-all active:scale-95 whitespace-nowrap"
                     >
-                        {language === 'vi' ? 'Tham gia ngay' : 'Join Now'}
+                        {language === 'vi' ? t('auth.register') : 'Join Now'}
                     </button>
                 </div>
             </nav>
 
             {/* Hero Section */}
-            <section className="relative z-10 pt-20 pb-32 px-4 text-center">
+            <section className="relative z-10 pt-12 md:pt-20 pb-20 md:pb-32 px-4 text-center">
                 <div className="max-w-6xl mx-auto">
                     <motion.div
                         initial={{ opacity: 0, y: 20 }}
                         animate={{ opacity: 1, y: 0 }}
                         transition={{ duration: 0.6 }}
                     >
-                        <span className="inline-block px-4 py-1.5 rounded-full border border-cyan-500/30 bg-cyan-500/10 text-cyan-400 text-xs font-bold font-mono uppercase tracking-widest mb-6">
+                        <span className="inline-block px-4 py-1.5 rounded-full border border-cyan-500/30 bg-cyan-500/10 text-cyan-400 text-[10px] md:text-xs font-bold font-mono uppercase tracking-widest mb-6">
                             {language === 'vi' ? 'CÔNG NGHỆ GIA PHẢ THẾ HỆ MỚI' : 'Next Generation Genealogy'}
                         </span>
-                        <h1 className="text-5xl md:text-8xl font-black text-white tracking-tighter mb-8 leading-[0.9] uppercase italic">
+                        <h1 className="text-4xl sm:text-6xl md:text-8xl font-black text-white tracking-tighter mb-8 leading-[1.1] md:leading-[0.9] uppercase italic">
                             {language === 'vi' ? (
                                 <>
                                     KẾT NỐI <span className="text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-blue-500">HUYẾT THỐNG</span>
-                                    <br />THỜI ĐẠI 4.0
+                                    <br className="hidden sm:block" />THỜI ĐẠI 4.0
                                 </>
                             ) : (
                                 <>
                                     CONNECTING <span className="text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-blue-500">ROOTS</span>
-                                    <br />FOR 4.0 ERA
+                                    <br className="hidden sm:block" />FOR 4.0 ERA
                                 </>
                             )}
                         </h1>
-                        <p className="max-w-2xl mx-auto text-slate-400 text-lg md:text-xl mb-12 font-medium leading-relaxed">
+                        <p className="max-w-2xl mx-auto text-slate-400 text-base md:text-xl mb-12 font-medium leading-relaxed">
                             {language === 'vi'
                                 ? 'Nền tảng quản lý gia phả thông minh, lưu trữ bảo mật trên đám mây với giao diện tương tác hiện đại và công nghệ trình chiếu Detective Profile.'
                                 : 'Modern genealogy platform with smart cloud storage, interactive UI, and Detective Profile presentation mode.'}
                         </p>
 
-                        <div className="flex flex-col md:flex-row items-center justify-center gap-4">
+                        <div className="flex flex-col sm:flex-row items-center justify-center gap-4 px-4 sm:px-0">
                             <button
                                 onClick={onStartDemo}
-                                className="group relative w-full md:w-auto px-8 py-4 bg-cyan-500 text-black font-black uppercase tracking-tight rounded-xl overflow-hidden active:scale-95 transition-all shadow-[0_0_30px_rgba(6,182,212,0.4)]"
+                                className="group relative w-full sm:w-auto px-8 py-4 bg-cyan-500 text-black font-black uppercase tracking-tight rounded-xl overflow-hidden active:scale-95 transition-all shadow-[0_0_30px_rgba(6,182,212,0.4)]"
                             >
                                 <div className="absolute inset-0 bg-white/20 translate-x-[-101%] group-hover:translate-x-0 transition-transform skew-x-12" />
-                                <span className="relative flex items-center justify-center gap-2 text-lg">
+                                <span className="relative flex items-center justify-center gap-2 text-base md:text-lg">
                                     <PlayCircle className="w-5 h-5" />
                                     {t('nav.demo')}
                                 </span>
@@ -117,18 +117,18 @@ export function LandingPage({ onStartDemo }: LandingPageProps) {
 
                             <button
                                 onClick={() => window.location.href = '/collections'}
-                                className="w-full md:w-auto px-8 py-4 bg-slate-900 border border-slate-800 text-white font-black uppercase tracking-tight rounded-xl hover:bg-slate-800 transition-all flex items-center justify-center gap-2 group"
+                                className="w-full sm:w-auto px-8 py-4 bg-slate-900 border border-slate-800 text-white font-black uppercase tracking-tight rounded-xl hover:bg-slate-800 transition-all flex items-center justify-center gap-2 group"
                             >
                                 <Package className="w-5 h-5 text-cyan-500 group-hover:scale-110 transition-transform" />
-                                {language === 'vi' ? 'Bộ sưu tập Thẻ' : 'Character Collections'}
+                                <span className="text-sm md:text-base">{language === 'vi' ? 'Bộ sưu tập Thẻ' : 'Character Collections'}</span>
                             </button>
 
                             <button
                                 onClick={() => setIsPublicAccessOpen(true)}
-                                className="w-full md:w-auto px-8 py-4 bg-slate-900 border border-slate-800 text-white font-black uppercase tracking-tight rounded-xl hover:bg-slate-800 transition-all flex items-center justify-center gap-2 group"
+                                className="w-full sm:w-auto px-8 py-4 bg-slate-900 border border-slate-800 text-white font-black uppercase tracking-tight rounded-xl hover:bg-slate-800 transition-all flex items-center justify-center gap-2 group"
                             >
                                 <Search className="w-5 h-5 text-cyan-500 group-hover:scale-110 transition-transform" />
-                                {language === 'vi' ? 'Truy cập Gia phả' : 'Access Tree'}
+                                <span className="text-sm md:text-base">{language === 'vi' ? 'Truy cập Gia phả' : 'Access Tree'}</span>
                             </button>
                         </div>
                     </motion.div>

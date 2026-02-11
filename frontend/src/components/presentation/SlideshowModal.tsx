@@ -10,7 +10,7 @@ import { cn } from '@/lib/utils';
 export function SlideshowModal() {
     const { isOpen, currentIndex, closePresentation, next, prev } = usePresentationStore();
     const { nodes } = useTreeStore();
-    const { t } = useLanguageStore();
+    const { t, language } = useLanguageStore();
 
     const members = nodes.map(n => n.data);
     const currentMember = members[currentIndex];
@@ -52,27 +52,27 @@ export function SlideshowModal() {
                     animate={{ scale: 1, opacity: 1, rotateY: 0 }}
                     exit={{ scale: 0.8, opacity: 0, rotateY: -90 }}
                     transition={{ type: 'spring', damping: 20 }}
-                    className="relative w-full max-w-5xl aspect-video md:aspect-[16/10] bg-zinc-950 border-4 border-zinc-800 shadow-[0_0_100px_rgba(220,38,38,0.2)] rounded-lg overflow-hidden flex flex-col md:flex-row"
+                    className="relative w-full max-w-5xl md:h-[80vh] bg-zinc-950 border-2 md:border-4 border-zinc-800 shadow-[0_0_100px_rgba(220,38,38,0.2)] rounded-lg overflow-y-auto md:overflow-hidden flex flex-col md:flex-row mx-2 md:mx-0"
                 >
                     {/* Header Bar */}
-                    <div className="absolute top-0 left-0 right-0 h-12 bg-zinc-900 border-b border-zinc-800 flex items-center justify-between px-6 z-10">
-                        <div className="flex items-center gap-3">
-                            <ShieldAlert className="w-5 h-5 text-red-500 animate-pulse" />
-                            <span className="text-[10px] md:text-xs font-mono text-zinc-500 uppercase tracking-[0.3em]">
+                    <div className="sticky top-0 left-0 right-0 h-10 md:h-12 bg-zinc-900 border-b border-zinc-800 flex items-center justify-between px-4 md:px-6 z-20 shrink-0">
+                        <div className="flex items-center gap-2 md:gap-3">
+                            <ShieldAlert className="w-4 h-4 md:w-5 md:h-5 text-red-500 animate-pulse" />
+                            <span className="text-[8px] md:text-xs font-mono text-zinc-500 uppercase tracking-[0.2em] md:tracking-[0.3em]">
                                 {t('presentation.status')}
                             </span>
                         </div>
-                        <div className="flex items-center gap-6">
-                            <span className="hidden md:block text-[10px] font-mono text-zinc-600">ID: {currentMember.id.slice(0, 8)}</span>
+                        <div className="flex items-center gap-4 md:gap-6">
+                            <span className="hidden sm:block text-[8px] md:text-[10px] font-mono text-zinc-600">ID: {currentMember.id.slice(0, 8)}</span>
                             <button onClick={closePresentation} className="text-zinc-500 hover:text-white transition-colors">
-                                <X className="w-6 h-6" />
+                                <X className="w-5 h-5 md:w-6 md:h-6" />
                             </button>
                         </div>
                     </div>
 
                     {/* Sidebar Area (Scanner Look) */}
-                    <div className="w-full md:w-80 bg-zinc-900/50 border-r border-zinc-800 p-6 pt-16 flex flex-col gap-8">
-                        <div className="relative group">
+                    <div className="w-full md:w-72 lg:w-80 bg-zinc-900/50 border-b md:border-b-0 md:border-r border-zinc-800 p-4 md:p-6 pt-14 md:pt-16 flex flex-col gap-6 md:gap-8 shrink-0">
+                        <div className="relative group max-w-[200px] md:max-w-none mx-auto w-full">
                             <div className="aspect-square bg-zinc-950 border-2 border-zinc-800 overflow-hidden relative">
                                 {/* Scan Line Animation */}
                                 <motion.div
@@ -85,17 +85,17 @@ export function SlideshowModal() {
                                     <img src={currentMember.photoUrl} alt={currentMember.fullName} className="w-full h-full object-cover grayscale contrast-125" />
                                 ) : (
                                     <div className="w-full h-full flex items-center justify-center bg-zinc-900">
-                                        <Search className="w-12 h-12 text-zinc-800" />
+                                        <Search className="w-10 h-10 md:w-12 md:h-12 text-zinc-800" />
                                     </div>
                                 )}
                                 {/* Red Corner Accents */}
-                                <div className="absolute top-0 left-0 w-4 h-4 border-t-2 border-l-2 border-red-600" />
-                                <div className="absolute bottom-0 right-0 w-4 h-4 border-b-2 border-r-2 border-red-600" />
+                                <div className="absolute top-0 left-0 w-3 h-3 md:w-4 md:h-4 border-t-2 border-l-2 border-red-600" />
+                                <div className="absolute bottom-0 right-0 w-3 h-3 md:w-4 md:h-4 border-b-2 border-r-2 border-red-600" />
                             </div>
-                            <div className="mt-4 p-3 bg-red-950/20 border border-red-900/30">
+                            <div className="mt-3 md:mt-4 p-2 md:p-3 bg-red-950/20 border border-red-900/30">
                                 <div className="flex items-center gap-2 mb-1">
-                                    <Fingerprint className="w-4 h-4 text-red-500" />
-                                    <span className="text-[10px] font-mono text-red-400 font-bold">DNA MATCHED</span>
+                                    <Fingerprint className="w-3.5 h-3.5 md:w-4 md:h-4 text-red-500" />
+                                    <span className="text-[8px] md:text-[10px] font-mono text-red-400 font-bold uppercase">DNA MATCHED</span>
                                 </div>
                                 <div className="h-1 bg-zinc-800 rounded-full overflow-hidden">
                                     <motion.div
@@ -107,21 +107,21 @@ export function SlideshowModal() {
                             </div>
                         </div>
 
-                        <div className="flex-1 space-y-4">
+                        <div className="grid grid-cols-2 md:flex md:flex-col gap-3 md:gap-4">
                             <div>
-                                <label className="text-[9px] font-mono text-zinc-500 uppercase">{t('member.gender')}</label>
-                                <p className="text-sm font-bold text-white uppercase tracking-wider">
+                                <label className="text-[8px] md:text-[9px] font-mono text-zinc-500 uppercase">{t('member.gender')}</label>
+                                <p className="text-[10px] md:text-sm font-bold text-white uppercase tracking-wider">
                                     {currentMember.gender === 'male' ? t('member.gender.male') : t('member.gender.female')}
                                 </p>
                             </div>
                             <div>
-                                <label className="text-[9px] font-mono text-zinc-500 uppercase">{t('member.job')}</label>
-                                <p className="text-sm font-bold text-white uppercase tracking-wider">{currentMember.job || '---'}</p>
+                                <label className="text-[8px] md:text-[9px] font-mono text-zinc-500 uppercase">{t('member.job')}</label>
+                                <p className="text-[10px] md:text-sm font-bold text-white uppercase tracking-wider truncate">{currentMember.job || '---'}</p>
                             </div>
-                            <div>
-                                <label className="text-[9px] font-mono text-zinc-500 uppercase">{t('member.is_alive')}</label>
+                            <div className="col-span-2">
+                                <label className="text-[8px] md:text-[9px] font-mono text-zinc-500 uppercase">{t('member.is_alive')}</label>
                                 <p className={cn(
-                                    "text-sm font-bold uppercase tracking-wider",
+                                    "text-[10px] md:text-sm font-bold uppercase tracking-wider",
                                     currentMember.isAlive ? "text-green-500" : "text-red-500"
                                 )}>
                                     {currentMember.isAlive ? t('member.alive') : t('member.deceased')}
@@ -131,27 +131,27 @@ export function SlideshowModal() {
                     </div>
 
                     {/* Main Info Area */}
-                    <div className="flex-1 p-8 pt-20 flex flex-col">
-                        <div className="mb-12">
-                            <div className="flex items-center gap-4 mb-2">
-                                <Target className="w-8 h-8 text-red-600" />
-                                <h1 className="text-4xl md:text-6xl font-black text-white uppercase tracking-tighter italic">
+                    <div className="flex-1 p-4 md:p-8 pt-6 md:pt-20 flex flex-col min-h-[400px] md:min-h-0">
+                        <div className="mb-6 md:mb-12">
+                            <div className="flex items-center gap-3 md:gap-4 mb-2">
+                                <Target className="w-6 h-6 md:w-8 md:h-8 text-red-600 shrink-0" />
+                                <h1 className="text-2xl md:text-6xl font-black text-white uppercase tracking-tighter italic break-words">
                                     {currentMember.fullName}
                                 </h1>
                             </div>
                             <div className="flex items-center gap-2">
-                                <div className="px-2 py-0.5 bg-red-600 text-[10px] font-bold text-white italic">CODE: {currentMember.alias || 'UNKNOWN'}</div>
+                                <div className="px-1.5 md:px-2 py-0.5 bg-red-600 text-[8px] md:text-[10px] font-bold text-white italic">CODE: {currentMember.alias || 'UNKNOWN'}</div>
                                 <div className="h-0.5 flex-1 bg-red-900/30" />
                             </div>
                         </div>
 
-                        <div className="flex-1 relative">
-                            <div className="absolute -left-4 top-0 bottom-0 w-1 bg-gradient-to-b from-red-600 via-transparent to-transparent opacity-50" />
-                            <div className="space-y-6">
+                        <div className="flex-1 relative mb-6">
+                            <div className="absolute -left-3 md:-left-4 top-0 bottom-0 w-0.5 md:w-1 bg-gradient-to-b from-red-600 via-transparent to-transparent opacity-50" />
+                            <div className="space-y-4 md:space-y-6">
                                 <div>
-                                    <h3 className="text-xs font-mono text-zinc-500 uppercase mb-2">Mô tả lý lịch / Background File</h3>
-                                    <p className="text-zinc-400 font-mono text-sm leading-relaxed max-w-2xl">
-                                        {currentMember.description || 'DỮ LIỆU ĐANG ĐƯỢC CẬP NHẬT TRANG HỆ THỐNG TRÌNH CHIẾU... QUY TRÌNH XÁC MINH NHÂN THÂN ĐANG DIỄN RA.'}
+                                    <h3 className="text-[10px] md:text-xs font-mono text-zinc-500 uppercase mb-2">{language === 'vi' ? 'Mô tả lý lịch' : 'Background File'}</h3>
+                                    <p className="text-zinc-400 font-mono text-xs md:text-sm leading-relaxed max-w-2xl">
+                                        {currentMember.description || (language === 'vi' ? 'DỮ LIỆU ĐANG ĐƯỢC CẬP NHẬT...' : 'DATA BEING UPDATED...')}
                                     </p>
                                 </div>
                             </div>
@@ -161,32 +161,32 @@ export function SlideshowModal() {
                                 initial={{ scale: 2, opacity: 0, rotate: -20 }}
                                 animate={{ scale: 1, opacity: 0.1, rotate: -15 }}
                                 transition={{ delay: 0.5 }}
-                                className="absolute bottom-10 right-10 border-8 border-red-600 p-4 text-7xl font-black text-red-600 rotate-[-15deg] select-none pointer-events-none"
+                                className="absolute bottom-4 right-4 md:bottom-10 md:right-10 border-4 md:border-8 border-red-600 p-2 md:p-4 text-3xl md:text-7xl font-black text-red-600 rotate-[-15deg] select-none pointer-events-none opacity-10"
                             >
                                 {t('presentation.revealed')}
                             </motion.div>
                         </div>
 
                         {/* Navigation Controls */}
-                        <div className="mt-auto flex items-center justify-between pt-8 border-t border-zinc-900">
+                        <div className="mt-auto flex flex-col sm:flex-row items-center justify-between gap-4 pt-4 md:pt-8 border-t border-zinc-900 sticky bottom-0 bg-zinc-950 pb-4 md:pb-0 z-10">
                             <div className="flex items-center gap-4">
                                 <button
                                     onClick={handlePrev}
-                                    className="p-3 bg-zinc-900 hover:bg-zinc-800 border border-zinc-800 text-white rounded-full transition-all group"
+                                    className="p-2 md:p-3 bg-zinc-900 hover:bg-zinc-800 border border-zinc-800 text-white rounded-full transition-all group"
                                 >
-                                    <ChevronLeft className="w-6 h-6 group-active:scale-95" />
+                                    <ChevronLeft className="w-5 h-5 md:w-6 md:h-6 group-active:scale-95" />
                                 </button>
-                                <span className="text-zinc-600 font-mono text-sm uppercase">Subject {currentIndex + 1} / {members.length}</span>
+                                <span className="text-zinc-600 font-mono text-[10px] md:text-sm uppercase whitespace-nowrap">Subject {currentIndex + 1} / {members.length}</span>
                                 <button
                                     onClick={handleNext}
-                                    className="p-3 bg-zinc-900 hover:bg-zinc-800 border border-zinc-800 text-white rounded-full transition-all group"
+                                    className="p-2 md:p-3 bg-zinc-900 hover:bg-zinc-800 border border-zinc-800 text-white rounded-full transition-all group"
                                 >
-                                    <ChevronRight className="w-6 h-6 group-active:scale-95" />
+                                    <ChevronRight className="w-5 h-5 md:w-6 md:h-6 group-active:scale-95" />
                                 </button>
                             </div>
                             <button
                                 onClick={closePresentation}
-                                className="px-6 py-2 bg-red-600 hover:bg-red-500 text-white font-bold text-xs uppercase tracking-[0.2em] rounded transition-all"
+                                className="w-full sm:w-auto px-6 py-2.5 bg-red-600 hover:bg-red-500 text-white font-bold text-[10px] md:text-xs uppercase tracking-[0.2em] rounded transition-all shadow-lg active:scale-95"
                             >
                                 TERMINATE
                             </button>

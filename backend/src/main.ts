@@ -10,11 +10,12 @@ async function bootstrap() {
   app.use(json({ limit: '50mb' }));
   app.use(urlencoded({ limit: '50mb', extended: true }));
   const frontendUrl = process.env.FRONTEND_URL || 'http://localhost:3000';
-  const origins = frontendUrl.split(',').map(url => url.trim());
+  const origins = frontendUrl.split(',').map(url => url.trim().replace(/\/$/, ''));
 
   app.enableCors({
     origin: (origin: string | undefined, callback: (err: Error | null, allow?: boolean) => void) => {
-      if (!origin || origins.includes(origin) || origin.endsWith('.vercel.app')) {
+      const normalizedOrigin = origin?.replace(/\/$/, '');
+      if (!origin || (normalizedOrigin && origins.includes(normalizedOrigin)) || origin.endsWith('.vercel.app')) {
         callback(null, true);
       } else {
         callback(null, false);
