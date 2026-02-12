@@ -192,19 +192,21 @@ export function GenealogyTree({ onExit }: GenealogyTreeProps) {
                                                 birthDate: ''
                                             });
                                         }}
-                                        className="bg-cyan-500 hover:bg-cyan-400 text-black px-4 py-2 rounded-xl text-[10px] font-black uppercase tracking-wider transition-all active:scale-95 flex items-center gap-2 shadow-[0_0_20px_rgba(6,182,212,0.2)]"
+                                        className="bg-cyan-500 hover:bg-cyan-400 text-black px-3 xl:px-4 py-2 rounded-xl text-[10px] font-black uppercase tracking-wider transition-all active:scale-95 flex items-center gap-2 shadow-[0_0_20px_rgba(6,182,212,0.2)]"
+                                        title={t('tree.add_node')}
                                     >
                                         <PlusCircle className="w-3.5 h-3.5" />
-                                        {t('tree.add_node')}
+                                        <span className="hidden xl:inline">{t('tree.add_node')}</span>
                                     </button>
                                 )}
 
                                 <button
                                     onClick={() => openPresentation(0)}
-                                    className="bg-red-600 hover:bg-red-500 text-white px-4 py-2 rounded-xl text-[10px] font-black uppercase tracking-wider transition-all active:scale-95 flex items-center gap-2 shadow-[0_0_20px_rgba(220,38,38,0.2)]"
+                                    className="bg-red-600 hover:bg-red-500 text-white px-3 xl:px-4 py-2 rounded-xl text-[10px] font-black uppercase tracking-wider transition-all active:scale-95 flex items-center gap-2 shadow-[0_0_20px_rgba(220,38,38,0.2)]"
+                                    title={t('tree.presentation')}
                                 >
                                     <Play className="w-3.5 h-3.5 fill-current" />
-                                    {t('tree.presentation')}
+                                    <span className="hidden xl:inline">{t('tree.presentation')}</span>
                                 </button>
 
                                 {!isReadOnly && (
@@ -212,34 +214,37 @@ export function GenealogyTree({ onExit }: GenealogyTreeProps) {
                                         onClick={handleSync}
                                         disabled={syncing}
                                         className={cn(
-                                            "flex items-center gap-2 px-4 py-2 rounded-xl text-[10px] font-black uppercase tracking-wider transition-all border active:scale-95",
+                                            "flex items-center gap-2 px-3 xl:px-4 py-2 rounded-xl text-[10px] font-black uppercase tracking-wider transition-all border active:scale-95",
                                             syncing ? "bg-slate-800 text-slate-500 border-slate-700 animate-pulse" :
                                                 isAuthenticated ? "bg-slate-800 hover:bg-slate-700 border-slate-700 text-white" :
                                                     "bg-slate-800/50 text-slate-600 border-slate-800 cursor-not-allowed"
                                         )}
+                                        title={t('tree.cloud_save')}
                                     >
                                         <Cloud className={cn("w-3.5 h-3.5", syncing ? "animate-bounce" : "text-cyan-500")} />
-                                        {syncing ? 'Sync' : t('tree.cloud_save')}
+                                        <span className="hidden xl:inline">{syncing ? 'Sync' : t('tree.cloud_save')}</span>
                                     </button>
                                 )}
 
                                 {!isReadOnly && (
                                     <button
                                         onClick={() => setIsShareModalOpen(true)}
-                                        className="bg-slate-800 hover:bg-slate-700 border border-slate-700 text-white px-4 py-2 rounded-xl text-[10px] font-black uppercase tracking-wider transition-all active:scale-95 flex items-center gap-2"
+                                        className="bg-slate-800 hover:bg-slate-700 border border-slate-700 text-white px-3 xl:px-4 py-2 rounded-xl text-[10px] font-black uppercase tracking-wider transition-all active:scale-95 flex items-center gap-2"
+                                        title={t('tree.share')}
                                     >
                                         <Share2 className="w-3.5 h-3.5 text-blue-500" />
-                                        {t('tree.share')}
+                                        <span className="hidden xl:inline">{t('tree.share')}</span>
                                     </button>
                                 )}
 
                                 {isAuthenticated && !isReadOnly && (
                                     <button
                                         onClick={() => router.push('/collections/contribute')}
-                                        className="bg-slate-800 hover:bg-slate-700 border border-slate-700 text-white px-4 py-2 rounded-xl text-[10px] font-black uppercase tracking-wider transition-all active:scale-95 flex items-center gap-2"
+                                        className="bg-slate-800 hover:bg-slate-700 border border-slate-700 text-white px-3 xl:px-4 py-2 rounded-xl text-[10px] font-black uppercase tracking-wider transition-all active:scale-95 flex items-center gap-2"
+                                        title={t('tree.contribute')}
                                     >
                                         <Database className="w-3.5 h-3.5 text-emerald-500" />
-                                        {t('tree.contribute')}
+                                        <span className="hidden xl:inline">{t('tree.contribute')}</span>
                                     </button>
                                 )}
 
