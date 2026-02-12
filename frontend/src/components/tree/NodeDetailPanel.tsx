@@ -190,6 +190,8 @@ export function NodeDetailPanel({ member, onClose }: NodeDetailPanelProps) {
                                     "w-full h-full object-cover bg-slate-800 sepia-[0.2] contrast-110",
                                     !formData.isAlive && "grayscale brightness-75"
                                 )}
+                                loading="lazy"
+                                decoding="async"
                                 onError={(e) => {
                                     e.currentTarget.src = 'https://ui-avatars.com/api/?background=222&color=fff&name=' + member.fullName;
                                 }}
@@ -334,6 +336,8 @@ export function NodeDetailPanel({ member, onClose }: NodeDetailPanelProps) {
                                                         src={rel.data.photoUrl}
                                                         alt={rel.data.fullName}
                                                         className="w-full h-full object-cover"
+                                                        loading="lazy"
+                                                        decoding="async"
                                                     />
                                                 ) : (
                                                     <User className="w-4 h-4 text-slate-500 opacity-50" />

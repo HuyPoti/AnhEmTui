@@ -5,7 +5,9 @@ import { motion } from 'framer-motion';
 import { TreePine, Zap, Shield, Globe, MousePointer2, ChevronRight, PlayCircle, Lock, Package, Search } from 'lucide-react';
 import { useAuthStore } from '@/stores/authStore';
 import { useLanguageStore } from '@/stores/languageStore';
-import { PublicAccessModal } from '@/components/auth/PublicAccessModal';
+import dynamic from 'next/dynamic';
+
+const PublicAccessModal = dynamic(() => import('@/components/auth/PublicAccessModal').then(mod => mod.PublicAccessModal), { ssr: false });
 import { cn } from '@/lib/utils';
 
 interface LandingPageProps {

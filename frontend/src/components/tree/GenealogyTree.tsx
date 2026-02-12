@@ -12,12 +12,14 @@ import {
 } from '@xyflow/react';
 import '@xyflow/react/dist/style.css';
 
+import dynamic from 'next/dynamic';
 import { CustomNode } from '@/components/tree/CustomNode';
 import { NodeDetailPanel } from '@/components/tree/NodeDetailPanel';
-import { ThemeCustomizer } from '@/components/tree/ThemeCustomizer';
-import { ShareModal } from '@/components/auth/ShareModal';
 import { LeftSidebar } from '@/components/sidebar/LeftSidebar';
-import { SlideshowModal } from '@/components/presentation/SlideshowModal';
+
+const ThemeCustomizer = dynamic(() => import('@/components/tree/ThemeCustomizer').then(mod => mod.ThemeCustomizer), { ssr: false });
+const ShareModal = dynamic(() => import('@/components/auth/ShareModal').then(mod => mod.ShareModal), { ssr: false });
+const SlideshowModal = dynamic(() => import('@/components/presentation/SlideshowModal').then(mod => mod.SlideshowModal), { ssr: false });
 import { useTreeStore } from '@/stores/treeStore';
 import { useAuthStore } from '@/stores/authStore';
 import { useLanguageStore } from '@/stores/languageStore';

@@ -85,6 +85,8 @@ export const CustomNode = memo(({ data, selected }: NodeProps) => {
                                 src={member.photoUrl}
                                 alt={member.fullName}
                                 className="w-full h-full object-cover sepia-[0.3] contrast-125 brightness-90 grayscale-[0.2]"
+                                loading="lazy"
+                                decoding="async"
                                 onError={(e) => {
                                     e.currentTarget.src = 'https://ui-avatars.com/api/?background=1a1a1a&color=fff&name=' + member.fullName;
                                 }}
@@ -133,6 +135,8 @@ export const CustomNode = memo(({ data, selected }: NodeProps) => {
                             src={member.photoUrl || `https://ui-avatars.com/api/?background=cbd5e1&color=64748b&name=${member.fullName}`}
                             alt={member.fullName}
                             className={cn("w-full h-full object-cover", !member.isAlive && "grayscale")}
+                            loading="lazy"
+                            decoding="async"
                         />
                     </div>
                     <div className="w-full p-1 text-center">
@@ -163,6 +167,8 @@ export const CustomNode = memo(({ data, selected }: NodeProps) => {
                             src={member.photoUrl || `https://ui-avatars.com/api/?background=0f172a&color=fff&name=${member.fullName}`}
                             alt={member.fullName}
                             className={cn("w-full h-full object-cover", !member.isAlive && "grayscale brightness-50")}
+                            loading="lazy"
+                            decoding="async"
                         />
                     </div>
 
