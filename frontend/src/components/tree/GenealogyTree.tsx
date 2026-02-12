@@ -154,7 +154,7 @@ export function GenealogyTree({ onExit }: GenealogyTreeProps) {
                     />
 
                     <Panel position="top-left" className="flex flex-col gap-2 max-w-[calc(100vw-2rem)] ml-10 lg:ml-0 z-[50]">
-                        <div className="bg-slate-900/80 backdrop-blur-xl border border-slate-700/50 p-1.5 rounded-2xl flex items-center gap-2 md:gap-4 shadow-2xl overflow-hidden">
+                        <div className="bg-slate-900/80 backdrop-blur-xl border border-slate-700/50 p-1.5 rounded-2xl flex items-center gap-2 md:gap-4 shadow-2xl">
                             <button
                                 onClick={onExit}
                                 className="w-9 h-9 md:w-10 md:h-10 bg-slate-800 hover:bg-slate-700 text-slate-400 hover:text-cyan-400 rounded-xl flex items-center justify-center transition-all active:scale-95 border border-slate-700/50 shrink-0"
@@ -475,8 +475,8 @@ export function GenealogyTree({ onExit }: GenealogyTreeProps) {
                             <span className="text-[10px] text-cyan-400 font-mono uppercase font-bold mb-1">{t('tree.relation_update')}</span>
                             <input
                                 type="text"
-                                value={activeEdge.label as string || ''}
-                                onChange={(e) => updateEdge(activeEdge.id, { label: e.target.value })}
+                                value={activeEdge.data?.label as string || ''}
+                                onChange={(e) => updateEdge(activeEdge.id, { data: { label: e.target.value } })}
                                 className="bg-slate-800 border border-slate-700 rounded px-3 py-2 text-white text-sm focus:outline-none focus:ring-1 focus:ring-cyan-500 min-w-[200px]"
                                 placeholder={t('tree.relation_placeholder')}
                             />

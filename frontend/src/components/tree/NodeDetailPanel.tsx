@@ -11,6 +11,8 @@ import { useLanguageStore } from '@/stores/languageStore';
 import { usePresentationStore } from '@/stores/presentationStore';
 import { API_BASE_URL } from '@/config/api';
 
+import { ImageCropper } from '@/components/common/ImageCropper';
+
 interface NodeDetailPanelProps {
     member: Member | null;
     onClose: () => void;
@@ -31,6 +33,7 @@ export function NodeDetailPanel({ member, onClose }: NodeDetailPanelProps) {
 
     const [isEditing, setIsEditing] = useState(false);
     const [formData, setFormData] = useState<Partial<Member>>({});
+    const [cropImage, setCropImage] = useState<string | null>(null);
 
     // Compute relationships
     const relationships = member ? edges.reduce((acc, edge) => {
@@ -39,10 +42,10 @@ export function NodeDetailPanel({ member, onClose }: NodeDetailPanelProps) {
 
         if (edge.source === member.id) {
             connectedNodeId = edge.target;
-            type = (edge.label as string) || (language === 'vi' ? 'Con' : 'Child');
+            type = (edge.data?.label as string) || (language === 'vi' ? 'Con' : 'Child');
         } else if (edge.target === member.id) {
             connectedNodeId = edge.source;
-            type = (edge.label as string) || (language === 'vi' ? 'Cha/Mẹ' : 'Parent');
+            type = (edge.data?.label as string) || (language === 'vi' ? 'Cha/Mẹ' : 'Parent');
         }
 
         if (connectedNodeId) {
@@ -92,17 +95,31 @@ export function NodeDetailPanel({ member, onClose }: NodeDetailPanelProps) {
         }
     };
 
-    const handleImageChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const file = e.target.files?.[0];
         if (!file) return;
 
         const reader = new FileReader();
+        reader.onloadend = () => {
+            setCropImage(reader.result as string);
+        };
+        reader.readAsDataURL(file);
+    };
+
+    const handleCropComplete = async (blob: Blob) => {
+        if (!member) return;
+
+        // Convert blob to base64 for preview/guest mode
+        const reader = new FileReader();
+        reader.readAsDataURL(blob);
         reader.onloadend = async () => {
             const base64 = reader.result as string;
 
             if (isAuthenticated && token) {
                 setUploading(true);
+                setCropImage(null); // Close cropper
                 try {
+                    // Upload logic
                     const response = await fetch(`${API_BASE_URL}/images/upload`, {
                         method: 'POST',
                         headers: {
@@ -114,8 +131,7 @@ export function NodeDetailPanel({ member, onClose }: NodeDetailPanelProps) {
                     const result = await response.json();
                     if (response.ok) {
                         const newPhotoUrl = result.url;
-                        setFormData({ ...formData, photoUrl: newPhotoUrl });
-                        // Immediately update the node in the store
+                        setFormData(prev => ({ ...prev, photoUrl: newPhotoUrl }));
                         updateNode(member.id, { photoUrl: newPhotoUrl });
                     } else {
                         throw new Error(result.message || 'Upload failed');
@@ -126,11 +142,11 @@ export function NodeDetailPanel({ member, onClose }: NodeDetailPanelProps) {
                     setUploading(false);
                 }
             } else {
-                // Guest mode: use base64
-                setFormData({ ...formData, photoUrl: base64 });
+                // Guest mode
+                setFormData(prev => ({ ...prev, photoUrl: base64 }));
+                setCropImage(null);
             }
         };
-        reader.readAsDataURL(file);
     };
 
     return (
@@ -394,6 +410,15 @@ export function NodeDetailPanel({ member, onClose }: NodeDetailPanelProps) {
                     )}
                 </div>
             </motion.div>
-        </AnimatePresence>
+            {
+                cropImage && (
+                    <ImageCropper
+                        imageSrc={cropImage!}
+                        onCancel={() => setCropImage(null)}
+                        onCropComplete={handleCropComplete}
+                    />
+                )
+            }
+        </AnimatePresence >
     );
 }

@@ -133,6 +133,7 @@ export const useTreeStore = create<TreeState>()(
 
             setTreeSettings: (settings) => set((state) => ({ ...state, ...settings })),
 
+
             setTreeId: (id) => set({ treeId: id }),
             setUserTrees: (trees) => set({ userTrees: trees }),
             loadTree: (treeData) => {
@@ -157,7 +158,7 @@ export const useTreeStore = create<TreeState>()(
                     id: r.id,
                     source: r.sourceMemberId,
                     target: r.targetMemberId,
-                    label: r.relationType,
+                    data: { label: r.relationType },
                     type: 'smoothstep',
                     animated: true,
                     style: { stroke: '#06b6d4', strokeWidth: 2, filter: 'drop-shadow(0 0 5px rgba(6,182,212,0.3))' },
@@ -225,8 +226,8 @@ export const useTreeStore = create<TreeState>()(
                 // Logic: Nếu 2 node có cùng tập hợp các mối quan hệ (cùng cha mẹ, cùng con cái)
                 // thì chúng ta sẽ thực hiện gộp (merge) thay vì tạo kết nối mới.
                 const getRelationsHash = (id: string) => {
-                    const incoming = edges.filter(e => e.target === id).map(e => `${e.source}-${e.label}`);
-                    const outgoing = edges.filter(e => e.source === id).map(e => `${e.target}-${e.label}`);
+                    const incoming = edges.filter(e => e.target === id).map(e => `${e.source}-${e.data?.label}`);
+                    const outgoing = edges.filter(e => e.source === id).map(e => `${e.target}-${e.data?.label}`);
                     return [...incoming.sort(), ...outgoing.sort()].join('|');
                 };
 
@@ -244,9 +245,7 @@ export const useTreeStore = create<TreeState>()(
                     id: `e-${connection.source}-${connection.target}-${Date.now()}`,
                     type: 'smoothstep',
                     animated: true,
-                    label: 'Quan hệ',
-                    labelStyle: { fill: '#22d3ee', fontWeight: 700, fontSize: 12 },
-                    labelBgStyle: { fill: '#0f172a', fillOpacity: 0.8, rx: 5, ry: 5 },
+                    data: { label: 'Quan hệ' },
                     style: { stroke: '#22d3ee', strokeWidth: 2, filter: 'drop-shadow(0 0 8px rgba(34,211,238,0.4))' },
                     markerEnd: { type: MarkerType.ArrowClosed, color: '#22d3ee' }
                 };
@@ -289,7 +288,8 @@ export const useTreeStore = create<TreeState>()(
                 set({
                     edges: get().edges.map((edge) => {
                         if (edge.id === id) {
-                            return { ...edge, ...data };
+                            const updatedData = data.data ? { ...edge.data, ...data.data } : edge.data;
+                            return { ...edge, ...data, data: updatedData };
                         }
                         return edge;
                     }),
@@ -344,7 +344,7 @@ export const useTreeStore = create<TreeState>()(
                     return index === self.findIndex(e =>
                         e.source === edge.source &&
                         e.target === edge.target &&
-                        e.label === edge.label
+                        e.data?.label === edge.data?.label
                     );
                 });
 
@@ -386,11 +386,9 @@ export const useTreeStore = create<TreeState>()(
                     id: `e${newId}-${nodeId}`,
                     source: newId,
                     target: nodeId,
-                    label: 'Cha/Mẹ',
+                    data: { label: 'Cha/Mẹ' },
                     type: 'smoothstep',
                     animated: true,
-                    labelStyle: { fill: '#22d3ee', fontWeight: 700, fontSize: 12 },
-                    labelBgStyle: { fill: '#0f172a', fillOpacity: 0.8, rx: 5, ry: 5 },
                     style: { stroke: '#22d3ee', strokeWidth: 2, filter: 'drop-shadow(0 0 8px rgba(34,211,238,0.4))' },
                     markerEnd: { type: MarkerType.ArrowClosed, color: '#22d3ee' }
                 };
@@ -430,11 +428,9 @@ export const useTreeStore = create<TreeState>()(
                     id: `e${nodeId}-${newId}`,
                     source: nodeId,
                     target: newId,
-                    label: 'Con',
+                    data: { label: 'Con' },
                     type: 'smoothstep',
                     animated: true,
-                    labelStyle: { fill: '#22d3ee', fontWeight: 700, fontSize: 12 },
-                    labelBgStyle: { fill: '#0f172a', fillOpacity: 0.8, rx: 5, ry: 5 },
                     style: { stroke: '#22d3ee', strokeWidth: 2, filter: 'drop-shadow(0 0 8px rgba(34,211,238,0.4))' },
                     markerEnd: { type: MarkerType.ArrowClosed, color: '#22d3ee' }
                 };
@@ -480,11 +476,9 @@ export const useTreeStore = create<TreeState>()(
                             id: `e${pId}-${newId}`,
                             source: pId,
                             target: newId,
-                            label: 'Con',
+                            data: { label: 'Con' },
                             type: 'smoothstep',
                             animated: true,
-                            labelStyle: { fill: '#22d3ee', fontWeight: 700, fontSize: 12 },
-                            labelBgStyle: { fill: '#0f172a', fillOpacity: 0.8, rx: 5, ry: 5 },
                             style: { stroke: '#22d3ee', strokeWidth: 2, filter: 'drop-shadow(0 0 8px rgba(34,211,238,0.4))' },
                             markerEnd: { type: MarkerType.ArrowClosed, color: '#22d3ee' }
                         });
@@ -523,7 +517,7 @@ export const useTreeStore = create<TreeState>()(
                         id: e.id,
                         sourceMemberId: e.source,
                         targetMemberId: e.target,
-                        relationType: (e.label as string) || 'Quan hệ',
+                        relationType: (e.data?.label as string) || 'Quan hệ',
                     })),
                     isPublic: get().isPublic
                 };
@@ -623,7 +617,7 @@ export const useTreeStore = create<TreeState>()(
                         id: r.id,
                         source: r.sourceMemberId,
                         target: r.targetMemberId,
-                        label: r.relationType,
+                        data: { label: r.relationType },
                         type: 'smoothstep',
                         animated: true,
                         style: { stroke: '#06b6d4', strokeWidth: 2, filter: 'drop-shadow(0 0 5px rgba(6,182,212,0.3))' },
