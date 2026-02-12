@@ -515,9 +515,9 @@ export const useTreeStore = create<TreeState>()(
                     })),
                     edges: edges.map(e => ({
                         id: e.id,
-                        sourceMemberId: e.source,
-                        targetMemberId: e.target,
-                        relationType: (e.data?.label as string) || 'Quan hệ',
+                        source: e.source,
+                        target: e.target,
+                        label: (e.data?.label as string) || 'Quan hệ',
                     })),
                     isPublic: get().isPublic
                 };

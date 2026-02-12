@@ -14,6 +14,7 @@ import { Member } from '@/types/tree';
 import { memo } from 'react';
 import { useTreeStore } from '@/stores/treeStore';
 import { ArrowUpCircle, ArrowDownCircle, Users, Info, X } from 'lucide-react';
+import { formatDate } from '@/utils/dateUtils';
 
 // This wrapper connects the React Flow logic (handles) with the UI (Card)
 export const CustomNode = memo(({ data, selected }: NodeProps) => {
@@ -25,6 +26,8 @@ export const CustomNode = memo(({ data, selected }: NodeProps) => {
     const { language } = useLanguageStore();
     const nodeStyle = useTreeStore(state => state.nodeStyle);
     const isReadOnly = useTreeStore(state => state.isReadOnly);
+
+    const displayBirthDate = formatDate(member.birthDate);
 
     return (
         <div className="relative flex flex-col items-center">
@@ -107,6 +110,8 @@ export const CustomNode = memo(({ data, selected }: NodeProps) => {
                                 "{member.alias}"
                             </p>
                         )}
+                        {/* Display Date */}
+                        {displayBirthDate && <p className="text-[6px] text-slate-500 text-center leading-none">{displayBirthDate}</p>}
                     </div>
 
                     {/* Status Indicator: "DECEASED" Rubber Stamp */}
@@ -148,6 +153,7 @@ export const CustomNode = memo(({ data, selected }: NodeProps) => {
                                 {member.alias}
                             </p>
                         )}
+                        {displayBirthDate && <p className="text-[8px] text-slate-500">{displayBirthDate}</p>}
                     </div>
                     {!member.isAlive && (
                         <div className="absolute top-1 right-1">
@@ -174,6 +180,7 @@ export const CustomNode = memo(({ data, selected }: NodeProps) => {
 
                     <div className="absolute -bottom-2 left-1/2 -translate-x-1/2 px-2 py-0.5 bg-slate-900/90 text-white text-[8px] font-bold rounded-full whitespace-nowrap border border-slate-700 shadow-xl opacity-0 group-hover:opacity-100 transition-opacity">
                         {member.fullName}
+                        {displayBirthDate && <span className="block text-[6px] font-normal text-slate-300">{displayBirthDate}</span>}
                     </div>
 
                     {!member.isAlive && (

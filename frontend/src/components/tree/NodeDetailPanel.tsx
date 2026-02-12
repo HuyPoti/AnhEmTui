@@ -10,6 +10,7 @@ import { useAuthStore } from '@/stores/authStore';
 import { useLanguageStore } from '@/stores/languageStore';
 import { usePresentationStore } from '@/stores/presentationStore';
 import { API_BASE_URL } from '@/config/api';
+import { formatDate, formatForInput } from '@/utils/dateUtils';
 
 import { ImageCropper } from '@/components/common/ImageCropper';
 
@@ -298,14 +299,13 @@ export function NodeDetailPanel({ member, onClose }: NodeDetailPanelProps) {
                                 <span className="block text-[10px] text-slate-500 uppercase">{t('member.birth_date')}</span>
                                 {isEditing ? (
                                     <input
-                                        type="text"
-                                        value={formData.birthDate || ''}
+                                        type="date"
+                                        value={formatForInput(formData.birthDate) || ''}
                                         onChange={(e) => setFormData({ ...formData, birthDate: e.target.value })}
                                         className="w-full bg-slate-800 border border-slate-600 rounded px-1 py-0.5 text-white"
-                                        placeholder="YYYY-MM-DD"
                                     />
                                 ) : (
-                                    member.birthDate || t('member.unknown')
+                                    formatDate(member.birthDate) || t('member.unknown')
                                 )}
                             </div>
                         </div>
