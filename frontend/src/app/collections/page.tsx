@@ -158,16 +158,6 @@ export default function CollectionsPage() {
                                     </div>
 
                                     <div className="flex items-center justify-between pt-4 border-t border-white/5">
-                                        <div className="flex items-center gap-4 text-slate-500">
-                                            <div className="flex items-center gap-1">
-                                                <Heart className="w-4 h-4" />
-                                                <span className="text-[10px] font-bold">1.2k</span>
-                                            </div>
-                                            <div className="flex items-center gap-1">
-                                                <Share2 className="w-4 h-4" />
-                                                <span className="text-[10px] font-bold">428</span>
-                                            </div>
-                                        </div>
                                         <button
                                             onClick={() => router.push(`/collections/${collection.id}/presentation`)}
                                             className="flex items-center gap-2 px-6 py-2 bg-white text-black text-[10px] font-black uppercase rounded-full hover:bg-cyan-500 transition-colors"
