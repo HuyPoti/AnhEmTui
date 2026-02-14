@@ -35,4 +35,4 @@ lerna-debug.log*
 /prisma/migrations
 
 # Admin
-# /src/admin
+/src/admin

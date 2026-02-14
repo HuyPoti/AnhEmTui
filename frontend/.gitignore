@@ -41,5 +41,4 @@ yarn-error.log*
 next-env.d.ts
 
 # Admin
-# /src/app/admin/
-# /src/components/admin
+/src/app/admin/control-center
