@@ -30,8 +30,8 @@ export function LandingPage({ onStartDemo }: LandingPageProps) {
             {/* Navbar */}
             <nav className="relative z-10 flex items-center justify-between px-4 md:px-8 py-4 md:py-6 border-b border-slate-900 bg-slate-950/50 backdrop-blur-md">
                 <div className="flex items-center gap-2">
-                    <div className="w-8 h-8 md:w-10 md:h-10 bg-cyan-600 rounded-lg flex items-center justify-center text-black shadow-[0_0_20px_rgba(8,145,178,0.3)]">
-                        <TreePine className="w-5 h-5 md:w-6 md:h-6" />
+                    <div className="w-8 h-8 md:w-10 md:h-10 bg-white rounded-lg flex items-center justify-center p-1 shadow-[0_0_20px_rgba(255,255,255,0.1)]">
+                        <img src="/logo.png" alt="ANH EM TUI Logo" className="w-full h-full object-contain" />
                     </div>
                     <span className="text-lg md:text-xl font-bold font-mono tracking-tighter text-white uppercase italic">
                         {t('app.title')}

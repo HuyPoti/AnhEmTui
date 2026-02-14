@@ -162,8 +162,8 @@ export function LeftSidebar() {
             {/* Header */}
             <div className="p-4 border-b border-slate-800 bg-slate-950/20">
                 <div className={cn("flex items-center gap-3 overflow-hidden whitespace-nowrap", !isExpanded && "justify-center")}>
-                    <div className="w-8 h-8 bg-classified/20 rounded flex items-center justify-center text-classified shrink-0">
-                        <Search className="w-5 h-5" />
+                    <div className="w-8 h-8 bg-white/10 rounded flex items-center justify-center p-1 shrink-0">
+                        <img src="/logo.png" alt="Logo" className="w-full h-full object-contain" />
                     </div>
                     {isExpanded && (
                         <span className="font-typewriter font-bold text-white tracking-widest uppercase text-sm">

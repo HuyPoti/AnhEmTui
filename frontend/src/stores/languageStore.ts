@@ -11,8 +11,8 @@ interface LanguageState {
 
 const translations: Record<Language, Record<string, string>> = {
   vi: {
-    "app.title": "Anh Em Tui",
-    "app.tagline": "Gìn giữ cội nguồn Việt",
+    "app.title": "ANH EM TUI",
+    "app.tagline": "Kết nối Huyết thống - Gìn giữ Cội nguồn",
     "nav.home": "Trang chủ",
     "nav.tree": "Sơ đồ gia tộc",
     "nav.demo": "Dùng thử",
@@ -143,8 +143,8 @@ const translations: Record<Language, Record<string, string>> = {
     "collections.origin": "Nguồn gốc / Tổ chức",
   },
   en: {
-    "app.title": "Anh Em Tui",
-    "app.tagline": "Preserving Vietnamese Roots",
+    "app.title": "ANH EM TUI",
+    "app.tagline": "Connecting Roots - Preserving Heritage",
     "nav.home": "Home",
     "nav.tree": "Family Tree",
     "nav.demo": "Demo",

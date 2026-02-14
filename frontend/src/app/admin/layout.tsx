@@ -107,8 +107,8 @@ export default function AdminLayout({
         <div className="h-full flex flex-col">
           {/* Header */}
           <div className="p-6 flex items-center gap-4">
-            <div className="w-10 h-10 rounded-xl bg-cyan-600/10 border border-cyan-500/20 flex items-center justify-center shrink-0">
-              <ShieldCheck className="w-6 h-6 text-cyan-500" />
+            <div className="w-10 h-10 rounded-xl bg-white/10 border border-white/20 flex items-center justify-center p-1 shrink-0">
+              <img src="/logo.png" alt="Admin Logo" className="w-full h-full object-contain" />
             </div>
             {isSidebarOpen && (
               <motion.span
