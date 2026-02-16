@@ -4,9 +4,11 @@
 @custom-variant dark (&:where(.dark, .dark *));
 
 @theme {
-  --font-mono: Consolas, Monaco, "Andale Mono", "Ubuntu Mono", monospace;
+  --font-mono: var(--font-geist-mono), Consolas, Monaco, "Andale Mono", "Ubuntu Mono", monospace;
   --font-typewriter: "Special Elite", system-ui, sans-serif;
   --font-vintage: "IM Fell English", serif;
+  --font-inter: var(--font-inter), sans-serif;
+  --font-vietnam: var(--font-be-vietnam), sans-serif;
 
   /* Detective Theme Colors */
   --color-paper: #fdfbf7;
@@ -29,7 +31,7 @@
 }
 
 body {
-  @apply bg-[#121212] text-neutral-100 font-vintage;
+  @apply bg-[#121212] text-neutral-100 font-vietnam;
 }
 
 /* Custom Utilities for Detective Theme */
@@ -40,6 +42,14 @@ body {
 
 .font-typewriter {
   font-family: var(--font-typewriter);
+}
+
+.font-inter {
+  font-family: var(--font-inter);
+}
+
+.font-vietnam {
+  font-family: var(--font-vietnam);
 }
 
 .text-classified {

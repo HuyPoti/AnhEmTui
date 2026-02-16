@@ -4,7 +4,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { usePresentationStore } from '@/stores/presentationStore';
 import { useTreeStore } from '@/stores/treeStore';
 import { useLanguageStore } from '@/stores/languageStore';
-import { X, ChevronLeft, ChevronRight, Fingerprint, Search, ShieldAlert, Target } from 'lucide-react';
+import { X, ChevronLeft, ChevronRight, Fingerprint, Users, ShieldAlert, Target } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
 export function SlideshowModal() {
@@ -26,170 +26,180 @@ export function SlideshowModal() {
     return (
         <AnimatePresence>
             <div className="fixed inset-0 z-[200] flex items-center justify-center p-0 md:p-10 overflow-hidden">
-                {/* Cinematic Backdrop */}
+                {/* Soft Backdrop */}
                 <motion.div
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 1 }}
                     exit={{ opacity: 0 }}
                     onClick={closePresentation}
-                    className="absolute inset-0 bg-black/95 backdrop-blur-xl"
+                    className="absolute inset-0 bg-slate-950/90 backdrop-blur-md"
                 />
-
-                {/* Dynamic Background Elements */}
-                <div className="absolute inset-0 overflow-hidden pointer-events-none opacity-20">
-                    <div className="absolute top-0 left-0 w-full h-1 bg-red-600/50 animate-pulse" />
-                    <div className="absolute bottom-0 left-0 w-full h-1 bg-red-600/50 animate-pulse" />
-                    <div className="absolute inset-0 grid grid-cols-12 gap-0 border-x border-red-900/20">
-                        {Array.from({ length: 12 }).map((_, i) => (
-                            <div key={i} className="border-r border-red-900/20 h-full" />
-                        ))}
-                    </div>
-                </div>
 
                 {/* Content Container */}
                 <motion.div
-                    initial={{ scale: 0.8, opacity: 0, rotateY: 90 }}
-                    animate={{ scale: 1, opacity: 1, rotateY: 0 }}
-                    exit={{ scale: 0.8, opacity: 0, rotateY: -90 }}
-                    transition={{ type: 'spring', damping: 20 }}
-                    className="relative w-full max-w-5xl md:h-[80vh] bg-zinc-950 border-2 md:border-4 border-zinc-800 shadow-[0_0_100px_rgba(220,38,38,0.2)] rounded-lg overflow-y-auto md:overflow-hidden flex flex-col md:flex-row mx-2 md:mx-0"
+                    initial={{ scale: 0.9, opacity: 0, y: 20 }}
+                    animate={{ scale: 1, opacity: 1, y: 0 }}
+                    exit={{ scale: 0.9, opacity: 0, y: 20 }}
+                    transition={{ type: 'spring', damping: 25, stiffness: 200 }}
+                    className="relative w-full max-w-5xl md:h-[85vh] bg-slate-900 border border-slate-700/50 shadow-2xl rounded-2xl overflow-y-auto md:overflow-hidden flex flex-col md:flex-row mx-2 md:mx-0"
                 >
-                    {/* Header Bar */}
-                    <div className="sticky top-0 left-0 right-0 h-10 md:h-12 bg-zinc-900 border-b border-zinc-800 flex items-center justify-between px-4 md:px-6 z-20 shrink-0">
-                        <div className="flex items-center gap-2 md:gap-3">
-                            <ShieldAlert className="w-4 h-4 md:w-5 md:h-5 text-red-500 animate-pulse" />
-                            <span className="text-[8px] md:text-xs font-mono text-zinc-500 uppercase tracking-[0.2em] md:tracking-[0.3em]">
-                                {t('presentation.status')}
-                            </span>
-                        </div>
-                        <div className="flex items-center gap-4 md:gap-6">
-                            <span className="hidden sm:block text-[8px] md:text-[10px] font-mono text-zinc-600">ID: {currentMember.id.slice(0, 8)}</span>
-                            <button onClick={closePresentation} className="text-zinc-500 hover:text-white transition-colors">
-                                <X className="w-5 h-5 md:w-6 md:h-6" />
-                            </button>
-                        </div>
-                    </div>
+                    {/* Top Decorative bar */}
+                    <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-cyan-600 via-cyan-400 to-cyan-600 z-30" />
 
-                    {/* Sidebar Area (Scanner Look) */}
-                    <div className="w-full md:w-72 lg:w-80 bg-zinc-900/50 border-b md:border-b-0 md:border-r border-zinc-800 p-4 md:p-6 pt-14 md:pt-16 flex flex-col gap-6 md:gap-8 shrink-0">
-                        <div className="relative group max-w-[200px] md:max-w-none mx-auto w-full">
-                            <div className="aspect-square bg-zinc-950 border-2 border-zinc-800 overflow-hidden relative">
-                                {/* Scan Line Animation */}
-                                <motion.div
-                                    initial={{ top: '0%' }}
-                                    animate={{ top: '100%' }}
-                                    transition={{ duration: 2, repeat: Infinity, ease: 'linear' }}
-                                    className="absolute left-0 right-0 h-0.5 bg-red-500 shadow-[0_0_10px_rgba(239,68,68,1)] z-10"
-                                />
-                                {currentMember.photoUrl ? (
-                                    <img src={currentMember.photoUrl} alt={currentMember.fullName} className="w-full h-full object-cover grayscale contrast-125" />
-                                ) : (
-                                    <div className="w-full h-full flex items-center justify-center bg-zinc-900">
-                                        <Search className="w-10 h-10 md:w-12 md:h-12 text-zinc-800" />
-                                    </div>
-                                )}
-                                {/* Red Corner Accents */}
-                                <div className="absolute top-0 left-0 w-3 h-3 md:w-4 md:h-4 border-t-2 border-l-2 border-red-600" />
-                                <div className="absolute bottom-0 right-0 w-3 h-3 md:w-4 md:h-4 border-b-2 border-r-2 border-red-600" />
-                            </div>
-                            <div className="mt-3 md:mt-4 p-2 md:p-3 bg-red-950/20 border border-red-900/30">
-                                <div className="flex items-center gap-2 mb-1">
-                                    <Fingerprint className="w-3.5 h-3.5 md:w-4 md:h-4 text-red-500" />
-                                    <span className="text-[8px] md:text-[10px] font-mono text-red-400 font-bold uppercase">DNA MATCHED</span>
+                    {/* Left Sidebar: Polaroid & Key Stats */}
+                    <div className="w-full md:w-80 bg-slate-800/50 border-b md:border-b-0 md:border-r border-slate-700/50 p-6 md:p-8 flex flex-col gap-8 shrink-0 z-10">
+                        <div className="relative group mx-auto w-full max-w-[240px] md:max-w-none">
+                            {/* Polaroid Frame */}
+                            <div className="bg-[#f0ece2] p-3 pb-10 shadow-[5px_5px_15px_rgba(0,0,0,0.5)] transform -rotate-1 transition-transform hover:rotate-0 duration-500 border border-[#d1cfc7]">
+                                <div className="aspect-[4/5] bg-slate-950 overflow-hidden relative border border-black/10">
+                                    {currentMember.photoUrl ? (
+                                        <motion.img
+                                            key={currentIndex}
+                                            initial={{ opacity: 0 }}
+                                            animate={{ opacity: 1 }}
+                                            src={currentMember.photoUrl}
+                                            alt={currentMember.fullName}
+                                            className="w-full h-full object-cover sepia-[0.1] contrast-[1.05]"
+                                            onError={(e) => {
+                                                e.currentTarget.src = 'https://ui-avatars.com/api/?background=1a1a1a&color=fff&name=' + currentMember.fullName;
+                                            }}
+                                        />
+                                    ) : (
+                                        <div className="w-full h-full flex items-center justify-center bg-slate-800">
+                                            <Users className="w-12 h-12 text-slate-600" />
+                                        </div>
+                                    )}
                                 </div>
-                                <div className="h-1 bg-zinc-800 rounded-full overflow-hidden">
-                                    <motion.div
-                                        initial={{ width: '0%' }}
-                                        animate={{ width: '98%' }}
-                                        className="h-full bg-red-600"
-                                    />
+                                {/* Label area on polaroid */}
+                                <div className="mt-4 text-center">
+                                    <span className="font-vietnam text-lg font-black text-slate-800 uppercase tracking-tight truncate block px-2">
+                                        {currentMember.fullName}
+                                    </span>
                                 </div>
                             </div>
+
+                            {/* Tape effect */}
+                            <div className="absolute -top-4 left-1/2 -translate-x-1/2 w-16 h-8 bg-yellow-200/20 backdrop-blur-[2px] border border-yellow-300/10 rotate-2 z-20 pointer-events-none" />
                         </div>
 
-                        <div className="grid grid-cols-2 md:flex md:flex-col gap-3 md:gap-4">
-                            <div>
-                                <label className="text-[8px] md:text-[9px] font-mono text-zinc-500 uppercase">{t('member.gender')}</label>
-                                <p className="text-[10px] md:text-sm font-bold text-white uppercase tracking-wider">
-                                    {currentMember.gender === 'male' ? t('member.gender.male') : t('member.gender.female')}
-                                </p>
-                            </div>
-                            <div>
-                                <label className="text-[8px] md:text-[9px] font-mono text-zinc-500 uppercase">{t('member.job')}</label>
-                                <p className="text-[10px] md:text-sm font-bold text-white uppercase tracking-wider truncate">{currentMember.job || '---'}</p>
-                            </div>
-                            <div className="col-span-2">
-                                <label className="text-[8px] md:text-[9px] font-mono text-zinc-500 uppercase">{t('member.is_alive')}</label>
-                                <p className={cn(
-                                    "text-[10px] md:text-sm font-bold uppercase tracking-wider",
-                                    currentMember.isAlive ? "text-green-500" : "text-red-500"
-                                )}>
-                                    {currentMember.isAlive ? t('member.alive') : t('member.deceased')}
-                                </p>
-                            </div>
-                        </div>
-                    </div>
-
-                    {/* Main Info Area */}
-                    <div className="flex-1 p-4 md:p-8 pt-6 md:pt-20 flex flex-col min-h-[400px] md:min-h-0">
-                        <div className="mb-6 md:mb-12">
-                            <div className="flex items-center gap-3 md:gap-4 mb-2">
-                                <Target className="w-6 h-6 md:w-8 md:h-8 text-red-600 shrink-0" />
-                                <h1 className="text-2xl md:text-6xl font-black text-white uppercase tracking-tighter italic break-words">
-                                    {currentMember.fullName}
-                                </h1>
-                            </div>
-                            <div className="flex items-center gap-2">
-                                <div className="px-1.5 md:px-2 py-0.5 bg-red-600 text-[8px] md:text-[10px] font-bold text-white italic">CODE: {currentMember.alias || 'UNKNOWN'}</div>
-                                <div className="h-0.5 flex-1 bg-red-900/30" />
-                            </div>
-                        </div>
-
-                        <div className="flex-1 relative mb-6">
-                            <div className="absolute -left-3 md:-left-4 top-0 bottom-0 w-0.5 md:w-1 bg-gradient-to-b from-red-600 via-transparent to-transparent opacity-50" />
-                            <div className="space-y-4 md:space-y-6">
+                        <div className="flex flex-col gap-5 pt-4">
+                            <div className="flex items-center gap-3">
+                                <div className="w-8 h-8 rounded-full bg-cyan-950/50 flex items-center justify-center border border-cyan-500/20">
+                                    <Users className="w-4 h-4 text-cyan-400" />
+                                </div>
                                 <div>
-                                    <h3 className="text-[10px] md:text-xs font-mono text-zinc-500 uppercase mb-2">{language === 'vi' ? 'Mô tả lý lịch' : 'Background File'}</h3>
-                                    <p className="text-zinc-400 font-mono text-xs md:text-sm leading-relaxed max-w-2xl">
-                                        {currentMember.description || (language === 'vi' ? 'DỮ LIỆU ĐANG ĐƯỢC CẬP NHẬT...' : 'DATA BEING UPDATED...')}
+                                    <label className="text-[10px] text-slate-500 uppercase font-bold tracking-widest block font-inter">{t('member.gender')}</label>
+                                    <p className="text-sm font-bold text-white uppercase font-vietnam">{currentMember.gender === 'male' ? t('member.gender.male') : t('member.gender.female')}</p>
+                                </div>
+                            </div>
+
+                            <div className="flex items-center gap-3">
+                                <div className="w-8 h-8 rounded-full bg-cyan-950/50 flex items-center justify-center border border-cyan-500/20">
+                                    <Target className="w-4 h-4 text-cyan-400" />
+                                </div>
+                                <div>
+                                    <label className="text-[10px] text-slate-500 uppercase font-bold tracking-widest block font-inter">{t('member.job')}</label>
+                                    <p className="text-sm font-bold text-white uppercase font-vietnam">{currentMember.job || '---'}</p>
+                                </div>
+                            </div>
+
+                            <div className="flex items-center gap-3">
+                                <div className="w-8 h-8 rounded-full bg-cyan-950/50 flex items-center justify-center border border-cyan-500/20">
+                                    <Fingerprint className="w-4 h-4 text-cyan-400" />
+                                </div>
+                                <div>
+                                    <label className="text-[10px] text-slate-500 uppercase font-bold tracking-widest block font-inter">{t('member.is_alive')}</label>
+                                    <p className={cn(
+                                        "text-sm font-bold uppercase font-vietnam",
+                                        currentMember.isAlive ? "text-emerald-400" : "text-rose-400"
+                                    )}>
+                                        {currentMember.isAlive ? t('member.alive') : t('member.deceased')}
                                     </p>
                                 </div>
                             </div>
+                        </div>
+                    </div>
 
-                            {/* Big Stamp */}
-                            <motion.div
-                                initial={{ scale: 2, opacity: 0, rotate: -20 }}
-                                animate={{ scale: 1, opacity: 0.1, rotate: -15 }}
-                                transition={{ delay: 0.5 }}
-                                className="absolute bottom-4 right-4 md:bottom-10 md:right-10 border-4 md:border-8 border-red-600 p-2 md:p-4 text-3xl md:text-7xl font-black text-red-600 rotate-[-15deg] select-none pointer-events-none opacity-10"
-                            >
-                                {t('presentation.revealed')}
-                            </motion.div>
+                    {/* Right Side: Detailed Bio & Content */}
+                    <div className="flex-1 p-6 md:p-10 flex flex-col min-h-[400px] md:min-h-0 relative">
+                        {/* Background watermark */}
+                        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 opacity-[0.02] pointer-events-none">
+                            <img src="/logo.png" alt="" className="w-96 h-96 object-contain grayscale" />
                         </div>
 
-                        {/* Navigation Controls */}
-                        <div className="mt-auto flex flex-col sm:flex-row items-center justify-between gap-4 pt-4 md:pt-8 border-t border-zinc-900 sticky bottom-0 bg-zinc-950 pb-4 md:pb-0 z-10">
-                            <div className="flex items-center gap-4">
-                                <button
-                                    onClick={handlePrev}
-                                    className="p-2 md:p-3 bg-zinc-900 hover:bg-zinc-800 border border-zinc-800 text-white rounded-full transition-all group"
-                                >
-                                    <ChevronLeft className="w-5 h-5 md:w-6 md:h-6 group-active:scale-95" />
-                                </button>
-                                <span className="text-zinc-600 font-mono text-[10px] md:text-sm uppercase whitespace-nowrap">Subject {currentIndex + 1} / {members.length}</span>
-                                <button
-                                    onClick={handleNext}
-                                    className="p-2 md:p-3 bg-zinc-900 hover:bg-zinc-800 border border-zinc-800 text-white rounded-full transition-all group"
-                                >
-                                    <ChevronRight className="w-5 h-5 md:w-6 md:h-6 group-active:scale-95" />
-                                </button>
+                        <div className="relative z-10 flex flex-col h-full">
+                            <header className="mb-8">
+                                <div className="flex items-center justify-between mb-2">
+                                    <span className="text-[10px] md:text-xs font-bold text-cyan-500 uppercase tracking-[0.3em] font-inter">
+                                        {language === 'vi' ? 'THÔNG TIN THÀNH VIÊN' : 'MEMBER PROFILE'}
+                                    </span>
+                                    <button onClick={closePresentation} className="p-2 hover:bg-slate-800 rounded-full text-slate-500 hover:text-white transition-all">
+                                        <X className="w-6 h-6" />
+                                    </button>
+                                </div>
+                                <h1 className="text-4xl md:text-7xl font-black text-white italic tracking-tighter uppercase leading-none mb-4 font-vietnam">
+                                    {currentMember.fullName}
+                                </h1>
+                                <div className="flex items-center gap-3">
+                                    <div className="px-3 py-1 bg-cyan-600/20 border border-cyan-500/30 text-[10px] font-bold text-cyan-400 rounded uppercase font-inter">
+                                        {currentMember.alias || (language === 'vi' ? 'KHÔNG CÓ TÊN HIỆU' : 'NO ALIAS')}
+                                    </div>
+                                    <div className="h-px flex-1 bg-slate-700/50" />
+                                </div>
+                            </header>
+
+                            <div className="flex-1 overflow-y-auto custom-scrollbar pr-4 font-vietnam">
+                                <div className="prose prose-invert max-w-none">
+                                    <h3 className="text-xs font-bold text-slate-400 uppercase tracking-widest mb-4 flex items-center gap-2 font-inter">
+                                        <div className="w-1 h-3 bg-cyan-500" />
+                                        {language === 'vi' ? 'Tiểu sử & Cuộc đời' : 'Biography & Life'}
+                                    </h3>
+                                    <p className="text-slate-300 text-lg md:text-xl leading-relaxed italic opacity-90 font-medium">
+                                        {currentMember.description || (language === 'vi' ? 'Lời kể về thành viên này đang được các con cháu trong dòng họ cập nhật. Những ký ức đẹp đẽ nhất sẽ sớm được ghi lại tại đây...' : 'The story of this member is being updated by the family descendants. The most beautiful memories will soon be recorded here...')}
+                                    </p>
+                                </div>
+
+                                {/* Symbolic quote or stamp */}
+                                <div className="mt-12 flex justify-end">
+                                    <div className="text-right">
+                                        <p className="text-cyan-500/30 italic text-sm font-medium">"Uống nước nhớ nguồn, làm con phải hiếu"</p>
+                                        <p className="text-[10px] text-slate-600 uppercase tracking-widest mt-1 font-inter">- Anh Em Tui -</p>
+                                    </div>
+                                </div>
                             </div>
-                            <button
-                                onClick={closePresentation}
-                                className="w-full sm:w-auto px-6 py-2.5 bg-red-600 hover:bg-red-500 text-white font-bold text-[10px] md:text-xs uppercase tracking-[0.2em] rounded transition-all shadow-lg active:scale-95"
-                            >
-                                TERMINATE
-                            </button>
+
+                            {/* Navigation Controls */}
+                            <footer className="mt-auto pt-8 border-t border-slate-700/50 flex flex-col sm:flex-row items-center justify-between gap-6 font-vietnam">
+                                <div className="flex items-center gap-6">
+                                    <button
+                                        onClick={handlePrev}
+                                        className="w-12 h-12 flex items-center justify-center bg-slate-800 hover:bg-slate-700 text-white rounded-full transition-all border border-slate-700 hover:border-cyan-500/50 shadow-lg active:scale-95 group"
+                                    >
+                                        <ChevronLeft className="w-6 h-6 group-hover:-translate-x-0.5 transition-transform" />
+                                    </button>
+                                    <div className="flex flex-col items-center">
+                                        <span className="text-[10px] font-bold text-slate-500 uppercase tracking-widest mb-1 font-inter">{language === 'vi' ? 'Thành viên' : 'Member'}</span>
+                                        <div className="flex items-center gap-2">
+                                            <span className="text-xl font-bold text-white font-inter">{currentIndex + 1}</span>
+                                            <span className="text-slate-600">/</span>
+                                            <span className="text-xl font-bold text-slate-400 font-inter">{members.length}</span>
+                                        </div>
+                                    </div>
+                                    <button
+                                        onClick={handleNext}
+                                        className="w-12 h-12 flex items-center justify-center bg-slate-800 hover:bg-slate-700 text-white rounded-full transition-all border border-slate-700 hover:border-cyan-500/50 shadow-lg active:scale-95 group"
+                                    >
+                                        <ChevronRight className="w-6 h-6 group-hover:translate-x-0.5 transition-transform" />
+                                    </button>
+                                </div>
+
+                                <button
+                                    onClick={closePresentation}
+                                    className="w-full sm:w-auto px-10 py-3 bg-slate-800 hover:bg-slate-700 text-white font-bold text-xs uppercase tracking-[0.2em] rounded-xl border border-slate-700 transition-all shadow-xl active:scale-95 font-inter"
+                                >
+                                    {language === 'vi' ? 'Đóng Trình Chiếu' : 'Close Presentation'}
+                                </button>
+                            </footer>
                         </div>
                     </div>
                 </motion.div>
